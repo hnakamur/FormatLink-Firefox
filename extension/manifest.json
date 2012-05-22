@@ -1,0 +1,20 @@
+{
+  "name": "Format Link",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Format a link and copy it to the clipboard.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Format Link",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "permissions": [
+    "tabs"
+  ]
+}
