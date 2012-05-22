@@ -37,7 +37,7 @@ Here are examples:
 
 ## License
 MIT License.
-Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Safari)
+Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Chrome)
 
 ## Credits
 
