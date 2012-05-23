@@ -1,24 +1,44 @@
 function populateFields(url, title) {
-  populateFormatSelect(url, title);
+  populateFormatGroup(url, title);
   var formatId = getOption('defaultFormat');
   populateText(formatId, url, title);
 }
 
-function populateFormatSelect(url, title) {
-  var selectElem = elem('formatSelect');
-  for (var i = 1; i <= 9; ++i) {
+function getFormatCount() {
+  var i;
+  for (i = 1; i <= 9; ++i) {
     var optTitle = getOption('title' + i);
     var optFormat = getOption('format' + i);
     if (optTitle === '' || optFormat === '') {
       break;
     }
-    selectElem.options[i - 1] = new Option(optTitle, i);
   }
-  selectElem.selectedIndex = getOption('defaultFormat') - 1;
-  selectElem.addEventListener('change', function() {
-    var formatId = selectElem.options[selectElem.selectedIndex].value;
-    populateText(formatId, url, title);
-  });
+  return i - 1;
+}
+
+function populateFormatGroup(url, title) {
+  var defaultFormat = getOption('defaultFormat');
+  var radios = [];
+  var cnt = getFormatCount();
+  for (var i = 1; i <= cnt; ++i) {
+    var optTitle = getOption('title' + i);
+    var radioId = 'format' + i;
+    radios.push('<span class="radio"><input type="radio" name="format" id="' +
+        radioId + '" value="' + i + '"' +
+        (i == defaultFormat ? ' checked' : '') +
+        '><label for="' + radioId + '">' + optTitle.replace(/</g, '&lt;') +
+        '</label></input></span>');
+  }
+  var group = elem('formatGroup');
+  group.innerHTML = radios.join('');
+
+  for (var i = 1; i <= radios.length; ++i) {
+    var radioId = 'format' + i;
+    elem(radioId).addEventListener('click', function(e) {
+      var formatId = e.target.value;
+      populateText(formatId, url, title);
+    });
+  }
 }
 
 function populateText(formatId, url, title) {
@@ -31,10 +51,18 @@ function populateText(formatId, url, title) {
   document.execCommand('copy');
 }
 
+function getSelectedFormat() {
+  var cnt = getFormatCount();
+  for (var i = 1; i <= cnt; ++i) {
+    if (elem('format' + i).checked) {
+      return i;
+    }
+  }
+  return undefined;
+}
+
 function saveDefaultFormat() {
-  var selectElem = elem('formatSelect');
-  var formatId = selectElem.options[selectElem.selectedIndex].value;
-  localStorage['defaultFormat'] = formatId;
+  localStorage['defaultFormat'] = getSelectedFormat();
 }
 
 function init() {

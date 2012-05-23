@@ -10,6 +10,9 @@ body {
 label {
   font: 90% 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif
 }
+span.radio {
+  margin: 0 4px 0 4px;
+}
 </style>
 <script src="common.js"></script>
 <script src="popup.js"></script>
@@ -19,10 +22,9 @@ label {
 <label for="textToCopy">Copied Text:</label>
 <textarea id="textToCopy" cols="50" rows="4"></textarea>
 </div>
-<div>
-<label for="formatSelect">Switch format:</label>
-<select id="formatSelect"></select>
-<button class="btn btn-primary" id="saveDefaultFormatButton">Save as Default</button>
+<label for="formatGroup">Switch format:</label>
+<div id="formatGroup"></div>
+<button id="saveDefaultFormatButton">Save as Default</button>
 </div>
 </body>
 </html>
