@@ -86,7 +86,7 @@ function init() {
 
   onGot = function(item) {
     options = item;
-    if !options.defaultFormat {
+    if (!options.defaultFormat) {
       options = DEFAULT_OPTIONS;
     }
   }
