@@ -1,7 +1,3 @@
-function elem(id) {
-  return document.getElementById(id);
-}
-
 function getDefaultFormat() {
   var select = elem('defaultFormat');
   return select.children[select.selectedIndex].value;
@@ -19,23 +15,8 @@ function setDefaultFormat(value) {
   select.selectedIndex = index;
 }
 
-function optionKeys() {
-  var keys = ['defaultFormat'];
-  for (var i = 1; i <= 9; ++i) {
-    keys.push('title'+i);
-    keys.push('format'+i);
-  }
-  return keys;
-}
-
 function restoreOptions() {
-  var keys = ['defaultFormat'];
-  for (var i = 1; i <= 9; ++i) {
-    keys.push('title'+i);
-    keys.push('format'+i);
-  }
   onGot = function(item) {
-    console.log('onGot', item);
     if (!item.defaultFormat) {
       restoreDefaults();
       return;
@@ -49,7 +30,7 @@ function restoreOptions() {
   onErr = function(err) {
     console.log('onErr', err);
   }
-  browser.storage.sync.get(keys).then(onGot, onErr);
+  browser.storage.sync.get(optionKeys()).then(onGot, onErr);
 }
 
 function saveOptions() {

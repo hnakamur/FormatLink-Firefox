@@ -1,4 +1,3 @@
-console.log('popup.js start');
 var currentTab;
 var options;
 
@@ -70,7 +69,6 @@ function getSelectedFormat() {
 }
 
 function saveDefaultFormat() {
-  console.log('saveDefaultFormat start');
   browser.storage.sync.set({defaultFormat: getSelectedFormat()});
 }
 
@@ -84,12 +82,10 @@ function optionKeys() {
 }
 
 function init() {
-  console.log('init start');
   elem('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
 
   onGot = function(item) {
     options = item;
-    console.log('popup onGot', item);
   }
   onErr = function(err) {
     console.log('popup onErr', err);
@@ -193,4 +189,3 @@ function formatUrl(format, url, title) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-console.log('popup.js end');

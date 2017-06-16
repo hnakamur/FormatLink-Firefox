@@ -1,5 +1,3 @@
-console.log('common.js start')
-
 var DEFAULT_OPTIONS = {
   "defaultFormat": 1,
   "title1": "Markdown",
@@ -22,11 +20,15 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
-//function getOption(name) {
-//  return localStorage[name] || DEFAULT_OPTIONS[name];
-//}
-
 function elem(id) {
   return document.getElementById(id);
 }
-console.log('common.js end')
+
+function optionKeys() {
+  var keys = ['defaultFormat'];
+  for (var i = 1; i <= 9; ++i) {
+    keys.push('title'+i);
+    keys.push('format'+i);
+  }
+  return keys;
+}
