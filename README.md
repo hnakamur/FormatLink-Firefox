@@ -1,7 +1,7 @@
-# Format Link for Chrome
+# Format Link for Firefox
 
 ## Why do I need it?
-To format the link of the active tab instantly to use in Markdown, Textile or other formats.
+To format the link of the active tab instantly to use in Markdown, reST, HTML, Text, Textile or other formats.
 
 ## How to use
 Press the toolbar icon of "Format Link".  When a popup opens, texts are automatically copied to the clipboard.
@@ -28,16 +28,18 @@ Here are examples:
 
 * Markdown
     * ```[{{title.s("\\[","\\[").s("\\]","\\]")}}]({{url.s("\\)","%29")}})```
-* Redmine Textile
-    * ```"{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}```
+* reST
+    * ````{{title}} <{{url}}>`_```
 * HTML
     * ```<a href="{{url.s("\"","&quot;")}}">{{title.s("<","&lt;")}}</a>```
 * Text
     * ```{{title}}\n{{url}}```
+* Redmine Texitile
+    * ```"{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}```
 
 ## License
 MIT License.
-Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Chrome)
+Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Firefox)
 
 ## Credits
 
