@@ -86,6 +86,9 @@ function init() {
 
   onGot = function(item) {
     options = item;
+    if !options.defaultFormat {
+      options = DEFAULT_OPTIONS;
+    }
   }
   onErr = function(err) {
     console.log('popup onErr', err);
