@@ -8,13 +8,20 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
+  "permissions": ["clipboardWrite","storage","tabs"],
   "browser_action": {
     "default_icon": "icon.png",
     "default_title": "Format Link",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "browser_style": true
   },
-  "options_page": "options.html",
-  "permissions": [
-    "tabs"
-  ]
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "applications": {
+    "gecko": {
+      "id": "formatlink@naruh.com"
+    }
+  }
 }

@@ -19,24 +19,46 @@ function setDefaultFormat(value) {
   select.selectedIndex = index;
 }
 
-function restoreOptions() {
-  var value = localStorage['defaultFormat'];
-  if (!value) {
-    restoreDefaults();
-  }
+function optionKeys() {
+  var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {
-    elem('title'+i).value = localStorage['title'+i] || '';
-    elem('format'+i).value = localStorage['format'+i] || '';
+    keys.push('title'+i);
+    keys.push('format'+i);
   }
-  setDefaultFormat(value);
+  return keys;
+}
+
+function restoreOptions() {
+  var keys = ['defaultFormat'];
+  for (var i = 1; i <= 9; ++i) {
+    keys.push('title'+i);
+    keys.push('format'+i);
+  }
+  onGot = function(item) {
+    console.log('onGot', item);
+    if (!item.defaultFormat) {
+      restoreDefaults();
+      return;
+    }
+    setDefaultFormat(item.defaultValue);
+    for (var i = 1; i <= 9; ++i) {
+      elem('title'+i).value = item['title'+i] || '';
+      elem('format'+i).value = item['format'+i] || '';
+    }
+  }
+  onErr = function(err) {
+    console.log('onErr', err);
+  }
+  browser.storage.sync.get(keys).then(onGot, onErr);
 }
 
 function saveOptions() {
-  localStorage['defaultFormat'] = getDefaultFormat();
+  var values = {defaultFormat: getDefaultFormat()}
   for (var i = 1; i <= 9; ++i) {
-    localStorage['title'+i] = elem('title'+i).value;
-    localStorage['format'+i] = elem('format'+i).value;
+    values['title'+i] = elem('title'+i).value;
+    values['format'+i] = elem('format'+i).value;
   }
+  browser.storage.sync.set(values);
 }
 
 function restoreDefaults() {

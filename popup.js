@@ -1,3 +1,11 @@
+console.log('popup.js start');
+var currentTab;
+var options;
+
+function getOption(key) {
+  return options[key];
+}
+
 function populateFields(url, title) {
   populateFormatGroup(url, title);
   var formatId = getOption('defaultFormat');
@@ -62,15 +70,39 @@ function getSelectedFormat() {
 }
 
 function saveDefaultFormat() {
-  localStorage['defaultFormat'] = getSelectedFormat();
+  console.log('saveDefaultFormat start');
+  browser.storage.sync.set({defaultFormat: getSelectedFormat()});
+}
+
+function optionKeys() {
+  var keys = ['defaultFormat'];
+  for (var i = 1; i <= 9; ++i) {
+    keys.push('title'+i);
+    keys.push('format'+i);
+  }
+  return keys;
 }
 
 function init() {
+  console.log('init start');
   elem('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
-  chrome.windows.getCurrent(function(currentWindow) {
-    chrome.tabs.getSelected(currentWindow.id, function(tab) {
-      populateFields(tab.url, tab.title);
-    });
+
+  onGot = function(item) {
+    options = item;
+    console.log('popup onGot', item);
+  }
+  onErr = function(err) {
+    console.log('popup onErr', err);
+  }
+  function updateTab(tabs) {
+    if (tabs[0]) {
+      currentTab = tabs[0];
+      populateFields(currentTab.url, currentTab.title);
+    }
+  }
+  browser.storage.sync.get(optionKeys()).then(onGot, onErr).
+  then(function() {
+    browser.tabs.query({active: true, currentWindow: true}).then(updateTab)
   });
 }
 
@@ -161,3 +193,4 @@ function formatUrl(format, url, title) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+console.log('popup.js end');
