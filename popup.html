@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Getting Started Extension's Popup</title>
+<title>FormatLink Extension's Popup</title>
 <style>
 body {
   min-width:360px;
   overflow-x:hidden;
+  margin: 4px;
+}
+textarea {
+  width: 100%;
+  height: 8em;
+}
+fieldset {
+  border: none;
+  margin: 4px;
+  padding: 0;
 }
 label {
   font: 90% 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif
@@ -18,13 +28,24 @@ span.radio {
 <script src="popup.js"></script>
 </head>
 <body>
+
+<form>
+<fieldset>
+<label>Copied Text:</label>
 <div>
-<label for="textToCopy">Copied Text:</label>
-<textarea id="textToCopy" cols="50" rows="4"></textarea>
+<textarea id="textToCopy"></textarea>
 </div>
-<label for="formatGroup">Switch format:</label>
-<div id="formatGroup"></div>
-<button id="saveDefaultFormatButton">Save as Default</button>
+</fieldset>
+
+<fieldset>
+<label>Switch Format:</label>
+<div id="formatGroup">
 </div>
+</fieldset>
+
+<fieldset>
+<button id="saveDefaultFormatButton">Set as default</button>
+</fieldset>
+</form>
 </body>
 </html>

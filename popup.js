@@ -27,24 +27,35 @@ function populateFormatGroup(url, title) {
   var defaultFormat = getOption('defaultFormat');
   var radios = [];
   var cnt = getFormatCount();
-  for (var i = 1; i <= cnt; ++i) {
-    var optTitle = getOption('title' + i);
-    var radioId = 'format' + i;
-    radios.push('<span class="radio"><input type="radio" name="format" id="' +
-        radioId + '" value="' + i + '"' +
-        (i == defaultFormat ? ' checked' : '') +
-        '><label for="' + radioId + '">' + optTitle.replace(/</g, '&lt;') +
-        '</label></input></span>');
-  }
   var group = elem('formatGroup');
-  group.innerHTML = radios.join('');
-
-  for (var i = 1; i <= radios.length; ++i) {
+  for (var i = 1; i <= cnt; ++i) {
     var radioId = 'format' + i;
-    elem(radioId).addEventListener('click', function(e) {
+
+    var btn = document.createElement('input');
+    btn.setAttribute('type', 'radio');
+    btn.setAttribute('name', 'fomrat');
+    btn.setAttribute('id', radioId);
+    btn.setAttribute('value', i);
+    if (i == defaultFormat) {
+      btn.setAttribute('checked', 'checked');
+    }
+    btn.addEventListener('click', function(e) {
       var formatId = e.target.value;
       populateText(formatId, url, title);
     });
+
+    var label = document.createElement('label');
+    label.setAttribute('for', radioId);
+    var optTitle = getOption('title' + i);
+    var text = document.createTextNode(optTitle);
+    label.appendChild(text);
+
+    var span = document.createElement('span')
+    span.setAttribute('class', 'radio');
+    span.appendChild(btn);
+    span.appendChild(label);
+
+    group.appendChild(span);
   }
 }
 
