@@ -27,7 +27,7 @@ function populateFormatGroup(url, title) {
   var defaultFormat = getOption('defaultFormat');
   var radios = [];
   var cnt = getFormatCount();
-  var group = elem('formatGroup');
+  var group = document.getElementById('formatGroup');
   for (var i = 1; i <= cnt; ++i) {
     var radioId = 'format' + i;
 
@@ -72,7 +72,7 @@ function populateText(formatId, url, title) {
 function getSelectedFormat() {
   var cnt = getFormatCount();
   for (var i = 1; i <= cnt; ++i) {
-    if (elem('format' + i).checked) {
+    if (document.getElementById('format' + i).checked) {
       return i;
     }
   }
@@ -83,17 +83,8 @@ function saveDefaultFormat() {
   browser.storage.sync.set({defaultFormat: getSelectedFormat()});
 }
 
-function optionKeys() {
-  var keys = ['defaultFormat'];
-  for (var i = 1; i <= 9; ++i) {
-    keys.push('title'+i);
-    keys.push('format'+i);
-  }
-  return keys;
-}
-
 function init() {
-  elem('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
+  document.getElementById('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
 
   onGot = function(item) {
     options = item;

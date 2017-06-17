@@ -20,10 +20,6 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
-function elem(id) {
-  return document.getElementById(id);
-}
-
 function optionKeys() {
   var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {
