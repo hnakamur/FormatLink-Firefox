@@ -1,10 +1,10 @@
-function populateFields(url, title) {
-    populateFormatGroup(url, title);
+function populateFields(url, title, selectedText) {
+    populateFormatGroup(url, title, selectedText);
     var formatId = options['defaultFormat'];
-    populateText(formatId, url, title);
+    populateText(formatId, url, title, selectedText);
 }
 
-function populateFormatGroup(url, title) {
+function populateFormatGroup(url, title, selectedText) {
     var defaultFormat = options['defaultFormat'];
     var radios = [];
     var cnt = getFormatCount();
@@ -22,7 +22,7 @@ function populateFormatGroup(url, title) {
         }
         btn.addEventListener('click', function(e) {
             var formatId = e.target.value;
-            populateText(formatId, url, title);
+            populateText(formatId, url, title, selectedText);
         });
 
         var label = document.createElement('label');
@@ -40,9 +40,9 @@ function populateFormatGroup(url, title) {
     }
 }
 
-function populateText(formatId, url, title) {
+function populateText(formatId, url, title, selectedText) {
     var format = options['format' + formatId];
-    var text = formatURL(format, url, title);
+    var text = formatURL(format, url, title, selectedText);
     var textElem = document.getElementById('textToCopy');
     textElem.value = text;
     textElem.focus();
@@ -69,8 +69,11 @@ function init() {
 
     function updateTab(tabs) {
         if (tabs[0]) {
-            var currentTab = tabs[0];
-            populateFields(currentTab.url, currentTab.title);
+            var tab = tabs[0];
+            browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
+            then(response => {
+                populateFields(tab.url, tab.title, response.selection);
+            });
         }
     }
     gettingOptions().then(() => {
