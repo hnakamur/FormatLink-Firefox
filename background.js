@@ -36,6 +36,11 @@ gettingOptions().then(options => {
           return browser.tabs.executeScript(tab.id, {
             code,
           });
+        }).then(() => {
+          var ctrlPressed = info.modifiers.includes('Ctrl');
+          if (ctrlPressed) {
+            saveDefaultFormat(formatID);
+          }
         }).catch(error => {
           // This could happen if the extension is not allowed to run code in
           // the page, for example if the tab is a privileged page.

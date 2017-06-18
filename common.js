@@ -22,6 +22,10 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
+function saveDefaultFormat(format) {
+  browser.storage.sync.set({defaultFormat: format});
+}
+
 function gettingOptions() {
   var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {

@@ -62,13 +62,10 @@ function getSelectedFormat() {
   return undefined;
 }
 
-function saveDefaultFormat() {
-  var format = getSelectedFormat();
-  browser.storage.sync.set({defaultFormat: format});
-}
-
 function init() {
-  document.getElementById('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
+  document.getElementById('saveDefaultFormatButton').addEventListener('click', () => {
+    saveDefaultFormat(getSelectedFormat());
+  });
 
   browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
     if (tabs[0]) {
