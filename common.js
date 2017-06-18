@@ -59,6 +59,7 @@ function getFormatCount(options) {
 }
 
 function createContextMenus(options) {
+  browser.contextMenus.removeAll();
   browser.contextMenus.create({
     id: "format-link-format-default",
     title: "copy URL in default format",

@@ -26,14 +26,13 @@ function restoreOptions() {
 }
 
 function saveOptions() {
-  var values = {defaultFormat: getDefaultFormat()}
+  var options = {defaultFormat: getDefaultFormat()}
   for (var i = 1; i <= 9; ++i) {
-    values['title'+i] = document.getElementById('title'+i).value;
-    values['format'+i] = document.getElementById('format'+i).value;
+    options['title'+i] = document.getElementById('title'+i).value;
+    options['format'+i] = document.getElementById('format'+i).value;
   }
-  browser.storage.sync.set(values);
-  options = values;
-  createContextMenus();
+  browser.storage.sync.set(options);
+  createContextMenus(options);
 }
 
 function restoreDefaults() {
