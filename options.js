@@ -16,7 +16,7 @@ function setDefaultFormat(value) {
 }
 
 function restoreOptions() {
-  gettingOptions().then(() => {
+  gettingOptions().then(options => {
     setDefaultFormat(options.defaultValue);
     for (var i = 1; i <= 9; ++i) {
       document.getElementById('title'+i).value = options['title'+i] || '';

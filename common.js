@@ -1,3 +1,5 @@
+var FORMAT_MAX_COUNT = 9;
+
 var DEFAULT_OPTIONS = {
   "defaultFormat": 1,
   "title1": "Markdown",
@@ -20,8 +22,6 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
-var options;
-
 function gettingOptions() {
   var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {
@@ -29,19 +29,20 @@ function gettingOptions() {
     keys.push('format'+i);
   }
 
-  var onGot = function(item) {
-    options = item;
+  function onGot(item) {
+    var options = item;
     if (!options.defaultFormat) {
       options = DEFAULT_OPTIONS;
     }
+    return Promise.resolve(options);
   }
-  var onErr = function(err) {
+  function onErr(err) {
     console.error('failed to load options', err);
   }
   return browser.storage.sync.get(keys).then(onGot, onErr);
 }
 
-function getFormatCount() {
+function getFormatCount(options) {
   var i;
   for (i = 1; i <= 9; ++i) {
     var optTitle = options['title' + i];
@@ -53,23 +54,20 @@ function getFormatCount() {
   return i - 1;
 }
 
-function createContextMenus() {
-  var cnt = getFormatCount();
-  if (cnt == 1) {
+function createContextMenus(options) {
+  browser.contextMenus.create({
+    id: "format-link-format-default",
+    title: "copy URL in default format",
+    contexts: ["all"]
+  });
+  var cnt = getFormatCount(options);
+  var i;
+  for (i = 0; i < cnt; i++) {
     browser.contextMenus.create({
-      id: "format-link-format" + i,
-      title: "Format Link in " + options["title" + i],
+      id: "format-link-format" + (i + 1),
+      title: "copy URL in " + options["title" + (i + 1)] + " format",
       contexts: ["all"]
     });
-  } else {
-    var i;
-    for (i = 0; i < cnt; i++) {
-      browser.contextMenus.create({
-        id: "format-link-format" + (i + 1),
-        title: options["title" + (i + 1)],
-        contexts: ["all"]
-      });
-    }
   }
 }
 

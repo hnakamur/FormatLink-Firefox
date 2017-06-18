@@ -1,13 +1,13 @@
-function populateFields(url, title, selectedText) {
-  populateFormatGroup(url, title, selectedText);
+function populateFields(options, url, title, selectedText) {
+  populateFormatGroup(options, url, title, selectedText);
   var formatId = options['defaultFormat'];
-  populateText(formatId, url, title, selectedText);
+  populateText(options, formatId, url, title, selectedText);
 }
 
-function populateFormatGroup(url, title, selectedText) {
+function populateFormatGroup(options, url, title, selectedText) {
   var defaultFormat = options['defaultFormat'];
   var radios = [];
-  var cnt = getFormatCount();
+  var cnt = getFormatCount(options);
   var group = document.getElementById('formatGroup');
   for (var i = 1; i <= cnt; ++i) {
     var radioId = 'format' + i;
@@ -20,9 +20,11 @@ function populateFormatGroup(url, title, selectedText) {
     if (i == defaultFormat) {
       btn.setAttribute('checked', 'checked');
     }
-    btn.addEventListener('click', function(e) {
-      var formatId = e.target.value;
-      populateText(formatId, url, title, selectedText);
+    btn.addEventListener('click', e => {
+      gettingOptions().then(options => {
+        var formatId = e.target.value;
+        populateText(options, formatId, url, title, selectedText);
+      });
     });
 
     var label = document.createElement('label');
@@ -40,7 +42,7 @@ function populateFormatGroup(url, title, selectedText) {
   }
 }
 
-function populateText(formatId, url, title, selectedText) {
+function populateText(options, formatId, url, title, selectedText) {
   var format = options['format' + formatId];
   var text = formatURL(format, url, title, selectedText);
   var textElem = document.getElementById('textToCopy');
@@ -51,9 +53,9 @@ function populateText(formatId, url, title, selectedText) {
 }
 
 function getSelectedFormat() {
-  var cnt = getFormatCount();
-  for (var i = 1; i <= cnt; ++i) {
-    if (document.getElementById('format' + i).checked) {
+  for (var i = 1; i <= FORMAT_MAX_COUNT; ++i) {
+    var radio = document.getElementById('format' + i);
+    if (radio && radio.checked) {
       return i;
     }
   }
@@ -61,23 +63,23 @@ function getSelectedFormat() {
 }
 
 function saveDefaultFormat() {
-  browser.storage.sync.set({defaultFormat: getSelectedFormat()});
+  var format = getSelectedFormat();
+  browser.storage.sync.set({defaultFormat: format});
 }
 
 function init() {
   document.getElementById('saveDefaultFormatButton').addEventListener('click', saveDefaultFormat);
 
-  function updateTab(tabs) {
+  browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
     if (tabs[0]) {
       var tab = tabs[0];
       browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
       then(response => {
-        populateFields(tab.url, tab.title, response.selection);
+        gettingOptions().then(options => {
+          populateFields(options, tab.url, tab.title, response.selection);
+        });
       });
     }
-  }
-  gettingOptions().then(() => {
-    browser.tabs.query({active: true, currentWindow: true}).then(updateTab)
   });
 }
 
