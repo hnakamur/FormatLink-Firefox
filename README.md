@@ -4,17 +4,33 @@
 To format the link of the active tab instantly to use in Markdown, reST, HTML, Text, Textile or other formats.
 
 ## How to use
-Press the toolbar icon of "Format Link".  When a popup opens, texts are automatically copied to the clipboard.
+
+### toolbar button
+Press the toolbar button of "Format Link".  When a popup opens, texts are automatically copied to the clipboard.
 
 Also you can change the format with selecting the format in the dropdown list. And if you press the "Save as Default" button, you can make it as default.
+
+### context menu
+Open the context menu "Format Link", and select one of sub menus for the format you would like to use to copy the URL.
+
+If you select a sub menu with a Control key pressed, then the selected format is becoming the default format.
 
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
 In format settings, you can use the mini template language.
 
 * {{variable}}
-    * variable = title / url
-    * No spaces are allowed.
+    * variable = title / url / text
+    * The value of variable `title` is the HTML page title.
+    * The value of variable `text` is the selected text if some text is selected,
+      or the page URL if no text is selected.
+    * The value of the variable `url` is the link URL if selection contains a link AND
+      you initiate a copy with a context menu.
+      Otherwise, the value of variable `url` is the HTML page URL.
+         * Note it is always the HTML page URL if you use the toolbar button to copy.
+           This behavior will be changed if I find a way to get a link URL in selection
+           when no context menu is selected.
+    * No spaces are allowed between variable name and braces.
 * {{variable.s("foo","bar")}}
     * Which means variable.replace(new RegExp("foo", 'g'), "bar")
     * You can use escape character \ in strings.
@@ -27,15 +43,34 @@ In format settings, you can use the mini template language.
 Here are examples:
 
 * Markdown
-    * ```[{{title.s("\\[","\\[").s("\\]","\\]")}}]({{url.s("\\)","%29")}})```
+
+```
+[{{text.s("\\[","\\[").s("\\]","\\]")}}]({{url.s("\\)","%29")}})
+```
+
 * reST
-    * ````{{title}} <{{url}}>`_```
+
+```
+{{text}} <{{url}}>`_
+```
+
 * HTML
-    * ```<a href="{{url.s("\"","&quot;")}}">{{title.s("<","&lt;")}}</a>```
+
+```
+<a href="{{url.s("\"","&quot;")}}">{{text.s("<","&lt;")}}</a>
+```
+
 * Text
-    * ```{{title}}\n{{url}}```
+
+```
+{{text}}\n{{url}}
+```
+
 * Redmine Texitile
-    * ```"{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}```
+
+```
+"{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}
+```
 
 ## License
 MIT License.
