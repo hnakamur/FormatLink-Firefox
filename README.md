@@ -15,6 +15,10 @@ Open the context menu "Format Link", and select one of sub menus for the format 
 
 If you select a sub menu with a Control key pressed, then the selected format is becoming the default format.
 
+### keyboard shortcut
+Press the shortcut key Alt+C to copy the URL in the default format.
+If you selected some text, the selected text is used instead of the page title.
+
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
 In format settings, you can use the mini template language.
@@ -27,7 +31,8 @@ In format settings, you can use the mini template language.
     * The value of the variable `url` is the link URL if selection contains a link AND
       you initiate a copy with a context menu.
       Otherwise, the value of variable `url` is the HTML page URL.
-         * Note it is always the HTML page URL if you use the toolbar button to copy.
+         * Note it is always the HTML page URL if you use the toolbar button or the
+           keyboard shortcut to copy.
            This behavior will be changed if I find a way to get a link URL in selection
            when no context menu is selected.
     * No spaces are allowed between variable name and braces.
