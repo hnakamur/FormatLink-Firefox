@@ -8,7 +8,17 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "permissions": ["clipboardWrite","storage","tabs"],
+  "applications": {
+    "gecko": {
+      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014"
+    }
+  },
+  "background": {
+    "scripts": [
+      "common.js",
+      "background.js"
+    ]
+  },
   "browser_action": {
     "default_icon": "icon.png",
     "default_title": "Format Link",
@@ -18,9 +28,11 @@
   "options_ui": {
     "page": "options.html"
   },
-  "applications": {
-    "gecko": {
-      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014"
-    }
-  }
+  "permissions": [
+    "activeTab",
+    "clipboardWrite",
+    "contextMenus",
+    "storage",
+    "tabs"
+  ]
 }
