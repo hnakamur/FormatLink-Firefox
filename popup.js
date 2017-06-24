@@ -70,10 +70,12 @@ function init() {
   browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
     if (tabs[0]) {
       var tab = tabs[0];
-      browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
-      then(response => {
-        gettingOptions().then(options => {
+      gettingOptions().then(options => {
+        browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
+        then(response => {
           populateFields(options, tab.url, tab.title, response.selection);
+        }).catch(reason => {
+          populateFields(options, tab.url, tab.title);
         });
       });
     }

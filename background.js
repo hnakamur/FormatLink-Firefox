@@ -42,14 +42,42 @@ gettingOptions().then(options => {
         var url = info.linkUrl ? info.linkUrl : info.pageUrl;
         var title = tab.title;
         var text = info.selectionText;
-        var formattedText = formatURL(format, url, title, text);
-        copyTextToClipboard(formattedText).
-        then(() => {
-          var ctrlPressed = info.modifiers.includes('Ctrl');
-          if (ctrlPressed) {
-            saveDefaultFormat(formatID);
+        try {
+          if (text) {
+            var formattedText = formatURL(format, url, title, text);
+            copyTextToClipboard(formattedText).
+            then(() => {
+              var ctrlPressed = info.modifiers.includes('Ctrl');
+              if (ctrlPressed) {
+                saveDefaultFormat(formatID);
+              }
+            });
+          } else {
+            browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
+            then(response => {
+              text = response.selection;
+              var formattedText = formatURL(format, url, title, text);
+              copyTextToClipboard(formattedText).
+              then(() => {
+                var ctrlPressed = info.modifiers.includes('Ctrl');
+                if (ctrlPressed) {
+                  saveDefaultFormat(formatID);
+                }
+              });
+            }).catch(reason => {
+              var formattedText = formatURL(format, url, title);
+              copyTextToClipboard(formattedText).
+              then(() => {
+                var ctrlPressed = info.modifiers.includes('Ctrl');
+                if (ctrlPressed) {
+                  saveDefaultFormat(formatID);
+                }
+              });
+            });
           }
-        });
+        } catch (e) {
+          console.error("FormatLink extension failed to copy URL to clipboard.");
+        }
       });
     }
   });
@@ -57,22 +85,33 @@ gettingOptions().then(options => {
 
 browser.commands.onCommand.addListener((command) => {
   if (command === 'format-link-in-default-format') {
-    browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
-      if (tabs[0]) {
-        var tab = tabs[0];
-        browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
-        then(response => {
-          gettingOptions().then(options => {
-            var defaultFormatID = options['defaultFormat'];
-            var format = options['format' + defaultFormatID];
-            var url = tab.url;
-            var title = tab.title;
-            var text = response.selection;
-            var formattedText = formatURL(format, url, title, text);
-            copyTextToClipboard(formattedText);
-          });
-        });
-      }
+    gettingOptions().then(options => {
+      browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
+        if (tabs[0]) {
+          var tab = tabs[0];
+          try{
+            browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
+            then(response => {
+              var defaultFormatID = options['defaultFormat'];
+              var format = options['format' + defaultFormatID];
+              var url = tab.url;
+              var title = tab.title;
+              var text = response.selection;
+              var formattedText = formatURL(format, url, title, text);
+              copyTextToClipboard(formattedText);
+            }).catch(reason => {
+              var defaultFormatID = options['defaultFormat'];
+              var format = options['format' + defaultFormatID];
+              var url = tab.url;
+              var title = tab.title;
+              var formattedText = formatURL(format, url, title);
+              copyTextToClipboard(formattedText);
+            });
+          } catch (e) {
+            console.error("FormatLink extension failed to copy URL to clipboard.");
+          }
+        }
+      });
     });
   }
 });
