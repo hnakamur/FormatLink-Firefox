@@ -28,6 +28,27 @@ function copyTextToClipboard(text) {
   });
 }
 
+function tryToGetLinkSelectionText(tab, url, text) {
+  if (text) {
+    return Promise.resolve(text);
+  }
+  return browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
+  then(response => {
+    var selText = response.selection;
+    if (selText) {
+      return selText;
+    }
+    return browser.tabs.executeScript(tab.id, {
+      code: `
+        var link = document.querySelector('a[href="${url}"]');
+        link ? link.innerText.trim() : "";
+      `
+    }).then(response => {
+      return response[0];
+    });
+  });
+}
+
 gettingOptions().then(options => {
   createContextMenus(options);
 
@@ -43,7 +64,8 @@ gettingOptions().then(options => {
         var title = tab.title;
         var text = info.selectionText;
         try {
-          if (text) {
+          tryToGetLinkSelectionText(tab, url, text).
+          then(text => {
             var formattedText = formatURL(format, url, title, text);
             copyTextToClipboard(formattedText).
             then(() => {
@@ -52,29 +74,7 @@ gettingOptions().then(options => {
                 saveDefaultFormat(formatID);
               }
             });
-          } else {
-            browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
-            then(response => {
-              text = response.selection;
-              var formattedText = formatURL(format, url, title, text);
-              copyTextToClipboard(formattedText).
-              then(() => {
-                var ctrlPressed = info.modifiers.includes('Ctrl');
-                if (ctrlPressed) {
-                  saveDefaultFormat(formatID);
-                }
-              });
-            }).catch(reason => {
-              var formattedText = formatURL(format, url, title);
-              copyTextToClipboard(formattedText).
-              then(() => {
-                var ctrlPressed = info.modifiers.includes('Ctrl');
-                if (ctrlPressed) {
-                  saveDefaultFormat(formatID);
-                }
-              });
-            });
-          }
+          });
         } catch (e) {
           console.error("FormatLink extension failed to copy URL to clipboard.");
         }
