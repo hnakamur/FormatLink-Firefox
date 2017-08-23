@@ -77,6 +77,14 @@ Here are examples:
 "{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}
 ```
 
+## KNOWN LIMITATIONS
+
+* Due to web extension API limitations, this extension does not work as users might expect.
+* You cannot use the toolbar nor the keyboard shortcut if you want to copy a link URL. With those two, the URL always becomes the page URL.
+* Due to security reason, the limitation becomes severer on about: pages and addons.mozilla.org pages.
+  * You cannot use the context menus nor the keyboard shortcut on those pages.
+  * You can use the toolbar to copy the URL, but the text always become the page title even if you select some text.
+
 ## License
 MIT License.
 Source codes are hosted at [Github](https://github.com/hnakamur/FormatLink-Firefox)
