@@ -80,6 +80,8 @@ Here are examples:
 ## KNOWN LIMITATIONS
 
 * Due to web extension API limitations, this extension does not work as users might expect.
+* When you right click on a link without selecting text manually, {{text}} becomes the text of the *first* link of the same URL.
+  * If there is another link of the same URL, {{text}} may be different than the text of you actually selected.
 * You cannot use the toolbar nor the keyboard shortcut if you want to copy a link URL. With those two, the URL always becomes the page URL.
 * Due to security reason, the limitation becomes severer on about: pages and addons.mozilla.org pages.
   * You cannot use the context menus nor the keyboard shortcut on those pages.
