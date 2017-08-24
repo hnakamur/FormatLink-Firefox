@@ -40,8 +40,16 @@ function tryToGetLinkSelectionText(tab, url, text) {
     }
     return browser.tabs.executeScript(tab.id, {
       code: `
-        var link = document.querySelector('a[href="${url}"]');
-        link ? link.innerText.trim() : "";
+        var text = '';
+        var links = document.querySelectorAll('a');
+        for (var i = 0; i < links.length; i++) {
+          var link = links[i];
+          if (link.href === "${url}") {
+            text = link.innerText.trim();
+            break
+          }
+        }
+        text;
       `
     }).then(response => {
       return response[0];
