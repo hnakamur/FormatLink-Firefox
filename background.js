@@ -72,16 +72,14 @@ gettingOptions().then(options => {
         var title = tab.title;
         var text = info.selectionText;
         try {
+          var ctrlPressed = info.modifiers.includes('Ctrl');
+          if (ctrlPressed) {
+            saveDefaultFormat(formatID);
+          }
           tryToGetLinkSelectionText(tab, url, text).
           then(text => {
             var formattedText = formatURL(format, url, title, text);
-            copyTextToClipboard(formattedText).
-            then(() => {
-              var ctrlPressed = info.modifiers.includes('Ctrl');
-              if (ctrlPressed) {
-                saveDefaultFormat(formatID);
-              }
-            });
+            copyTextToClipboard(formattedText);
           });
         } catch (e) {
           console.error("FormatLink extension failed to copy URL to clipboard.");
