@@ -32,7 +32,7 @@ function saveOptions() {
     options['format'+i] = document.getElementById('format'+i).value;
   }
   browser.storage.sync.set(options);
-  createContextMenus(options);
+  createContextMenu(options);
 }
 
 function restoreDefaults() {

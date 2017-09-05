@@ -58,22 +58,13 @@ function getFormatCount(options) {
   return i - 1;
 }
 
-function createContextMenus(options) {
+function createContextMenu(options) {
   browser.contextMenus.removeAll();
   browser.contextMenus.create({
     id: "format-link-format-default",
-    title: "as Default",
+    title: "Format Link as Default",
     contexts: ["all"]
   });
-  var cnt = getFormatCount(options);
-  var i;
-  for (i = 0; i < cnt; i++) {
-    browser.contextMenus.create({
-      id: "format-link-format" + (i + 1),
-      title: "as " + options["title" + (i + 1)],
-      contexts: ["all"]
-    });
-  }
 }
 
 function formatURL(format, url, title, selectedText) {

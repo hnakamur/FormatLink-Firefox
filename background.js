@@ -58,24 +58,17 @@ function tryToGetLinkSelectionText(tab, url, text) {
 }
 
 gettingOptions().then(options => {
-  createContextMenus(options);
+  createContextMenu(options);
 
   browser.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId.startsWith("format-link-format")) {
+    if (info.menuItemId === "format-link-format-default") {
       gettingOptions().then(options => {
-        var formatID = info.menuItemId.substr("format-link-format".length);
-        if (formatID === "-default") {
-          formatID = options["defaultFormat"];
-        }
+        var formatID = options["defaultFormat"];
         var format = options['format' + formatID];
         var url = info.linkUrl ? info.linkUrl : info.pageUrl;
         var title = tab.title;
         var text = info.selectionText;
         try {
-          var ctrlPressed = info.modifiers.includes('Ctrl');
-          if (ctrlPressed) {
-            saveDefaultFormat(formatID);
-          }
           tryToGetLinkSelectionText(tab, url, text).
           then(text => {
             var formattedText = formatURL(format, url, title, text);

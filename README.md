@@ -11,9 +11,9 @@ Press the toolbar button of "Format Link".  When a popup opens, texts are automa
 Also you can change the format with selecting the format in the dropdown list. And if you press the "Save as Default" button, you can make it as default.
 
 ### context menu
-Open the context menu "Format Link", and select one of sub menus for the format you would like to use to copy the URL.
-
-If you select a sub menu with a Control key pressed, then the selected format is becoming the default format.
+Move mouse cursor onto the link which you want to copy, then open the context menu and select "Format Link as Default".
+It will copy the URL as the default format.
+To change the default format, please use the toolbar button and the "Save as Default" button.
 
 ### keyboard shortcut
 Press the shortcut key Alt+C to copy the URL in the default format.
