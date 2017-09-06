@@ -9,6 +9,9 @@ function populateFormatGroup(options, url, title, selectedText) {
   var radios = [];
   var cnt = getFormatCount(options);
   var group = document.getElementById('formatGroup');
+  while (group.hasChildNodes()) {
+    group.removeChild(group.childNodes[0]);
+  }
   for (var i = 1; i <= cnt; ++i) {
     var radioId = 'format' + i;
 
@@ -24,6 +27,14 @@ function populateFormatGroup(options, url, title, selectedText) {
       gettingOptions().then(options => {
         var formatId = e.target.value;
         populateText(options, formatId, url, title, selectedText);
+        var defaultName = options['title' + formatId];
+        saveDefaultFormat(formatId).
+        then(() => {
+          updateContextMenu(defaultName).
+          catch(err => {
+            console.error("failed to update context menu", err);
+          });
+        });
       });
     });
 
@@ -40,6 +51,7 @@ function populateFormatGroup(options, url, title, selectedText) {
 
     group.appendChild(span);
   }
+
 }
 
 function populateText(options, formatId, url, title, selectedText) {
@@ -52,21 +64,7 @@ function populateText(options, formatId, url, title, selectedText) {
   document.execCommand('copy');
 }
 
-function getSelectedFormat() {
-  for (var i = 1; i <= FORMAT_MAX_COUNT; ++i) {
-    var radio = document.getElementById('format' + i);
-    if (radio && radio.checked) {
-      return i;
-    }
-  }
-  return undefined;
-}
-
 function init() {
-  document.getElementById('saveDefaultFormatButton').addEventListener('click', () => {
-    saveDefaultFormat(getSelectedFormat());
-  });
-
   browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
     if (tabs[0]) {
       var tab = tabs[0];
@@ -81,5 +79,4 @@ function init() {
     }
   });
 }
-
 document.addEventListener('DOMContentLoaded', init);

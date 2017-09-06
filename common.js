@@ -1,7 +1,7 @@
 var FORMAT_MAX_COUNT = 9;
 
 var DEFAULT_OPTIONS = {
-  "defaultFormat": 1,
+  "defaultFormat": "1",
   "title1": "Markdown",
   "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\)\",\"%29\")}})",
   "title2": "reST",
@@ -23,7 +23,7 @@ var DEFAULT_OPTIONS = {
 };
 
 function saveDefaultFormat(format) {
-  browser.storage.sync.set({defaultFormat: format});
+  return browser.storage.sync.set({defaultFormat: format});
 }
 
 function gettingOptions() {
@@ -58,12 +58,27 @@ function getFormatCount(options) {
   return i - 1;
 }
 
-function createContextMenu(options) {
-  browser.contextMenus.removeAll();
-  browser.contextMenus.create({
-    id: "format-link-format-default",
-    title: "Format Link as Default",
-    contexts: ["all"]
+function createContextMenu(defaultFormat) {
+  return new Promise((resolve, reject) => {
+    browser.contextMenus.create({
+      id: "format-link-format-default",
+      title: "Format Link as " + defaultFormat,
+      contexts: ["all"],
+    },
+    () => {
+      var err = browser.runtime.lastError;
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    })
+  });
+}
+
+function updateContextMenu(defaultFormat) {
+  return browser.contextMenus.update("format-link-format-default", {
+    title: "Format Link as " + defaultFormat
   });
 }
 

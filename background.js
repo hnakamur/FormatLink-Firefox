@@ -58,27 +58,31 @@ function tryToGetLinkSelectionText(tab, url, text) {
 }
 
 gettingOptions().then(options => {
-  createContextMenu(options);
-
-  browser.contextMenus.onClicked.addListener((info, tab) => {
-    if (info.menuItemId === "format-link-format-default") {
-      gettingOptions().then(options => {
-        var formatID = options["defaultFormat"];
-        var format = options['format' + formatID];
-        var url = info.linkUrl ? info.linkUrl : info.pageUrl;
-        var title = tab.title;
-        var text = info.selectionText;
-        try {
-          tryToGetLinkSelectionText(tab, url, text).
-          then(text => {
-            var formattedText = formatURL(format, url, title, text);
-            copyTextToClipboard(formattedText);
-          });
-        } catch (e) {
-          console.error("FormatLink extension failed to copy URL to clipboard.");
-        }
-      });
-    }
+  var defaultFormat = options['title' + (options['defaultFormat'] || 1)];
+  createContextMenu(defaultFormat).
+  then(() => {
+    browser.contextMenus.onClicked.addListener((info, tab) => {
+      if (info.menuItemId === "format-link-format-default") {
+        gettingOptions().then(options => {
+          var formatID = options["defaultFormat"];
+          var format = options['format' + formatID];
+          var url = info.linkUrl ? info.linkUrl : info.pageUrl;
+          var title = tab.title;
+          var text = info.selectionText;
+          try {
+            tryToGetLinkSelectionText(tab, url, text).
+            then(text => {
+              var formattedText = formatURL(format, url, title, text);
+              copyTextToClipboard(formattedText);
+            });
+          } catch (e) {
+            console.error("FormatLink extension failed to copy URL to clipboard.");
+          }
+        });
+      }
+    });
+  }).catch(err => {
+    console.error("failed to create context menu", err);
   });
 });
 

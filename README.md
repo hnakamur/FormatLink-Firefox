@@ -8,7 +8,7 @@ To format the link of the active tab instantly to use in Markdown, reST, HTML, T
 ### toolbar button
 Press the toolbar button of "Format Link".  When a popup opens, texts are automatically copied to the clipboard.
 
-Also you can change the format with selecting the format in the dropdown list. And if you press the "Save as Default" button, you can make it as default.
+Also you can change the format with selecting a radio button. The selected format becomes the default format.
 
 ### context menu
 Move mouse cursor onto the link which you want to copy, then open the context menu and select "Format Link as Default".
