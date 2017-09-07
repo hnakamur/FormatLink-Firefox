@@ -23,19 +23,16 @@ function populateFormatGroup(options, url, title, selectedText) {
     if (i == defaultFormat) {
       btn.setAttribute('checked', 'checked');
     }
-    btn.addEventListener('click', e => {
-      gettingOptions().then(options => {
-        var formatId = e.target.value;
-        populateText(options, formatId, url, title, selectedText);
-        var defaultName = options['title' + formatId];
-        saveDefaultFormat(formatId).
-        then(() => {
-          updateContextMenu(defaultName).
-          catch(err => {
-            console.error("failed to update context menu", err);
-          });
-        });
-      });
+    btn.addEventListener('click', async e => {
+      var formatId = e.target.value;
+      populateText(options, formatId, url, title, selectedText);
+      var defaultName = options['title' + formatId];
+      try {
+        await saveDefaultFormat(formatId);
+        await updateContextMenu(defaultName);
+      } catch (err) {
+        console.error("failed to update context menu", err);
+      }
     });
 
     var label = document.createElement('label');
@@ -64,19 +61,22 @@ function populateText(options, formatId, url, title, selectedText) {
   document.execCommand('copy');
 }
 
-function init() {
-  browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
-    if (tabs[0]) {
-      var tab = tabs[0];
-      gettingOptions().then(options => {
-        browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
-        then(response => {
-          populateFields(options, tab.url, tab.title, response.selection);
-        }).catch(reason => {
-          populateFields(options, tab.url, tab.title);
-        });
-      });
+async function init() {
+  var options = await gettingOptions();
+  var res = await browser.storage.local.get("lastCopied");
+  var lastCopied = res.lastCopied;
+  if (lastCopied.url) {
+    return populateFields(options, lastCopied.url, lastCopied.title, lastCopied.selectedText);
+  }
+  var tabs = await browser.tabs.query({active: true, currentWindow: true});
+  if (tabs[0]) {
+    var tab = tabs[0];
+    var response = await browser.tabs.sendMessage(tab.id, {"method": "getSelection"});
+    try {
+      populateFields(options, tab.url, tab.title, response.selection);
+    } catch (err) {
+      populateFields(options, tab.url, tab.title);
     }
-  });
+  }
 }
 document.addEventListener('DOMContentLoaded', init);
