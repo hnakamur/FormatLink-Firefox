@@ -5,19 +5,14 @@ To format the link of the active tab instantly to use in Markdown, reST, HTML, T
 
 ## How to use
 
-### toolbar button
-Press the toolbar button of "Format Link".  When a popup opens, texts are automatically copied to the clipboard.
-
-Also you can change the format with selecting a radio button. The selected format becomes the default format.
-
 ### context menu
-Move mouse cursor onto the link which you want to copy, then open the context menu and select "Format Link as Default".
-It will copy the URL as the default format.
-To change the default format, please use the toolbar button and the "Save as Default" button.
+To copy the URL, use the context menu.
+Open the context menu and select the "Format Link as XXX" menu item.
+XXX in the menu item label changes as you select the default format with the radio button in the popup page for the toolbar button.
 
-### keyboard shortcut
-Press the shortcut key Alt+C to copy the URL in the default format.
-If you selected some text, the selected text is used instead of the page title.
+### toolbar button
+The popup page is shown when you press the toolbar button of "Format Link".
+You can change the format by clicking a radio button for each format which you registered in the options page.
 
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
@@ -27,14 +22,10 @@ In format settings, you can use the mini template language.
     * variable = title / url / text
     * The value of variable `title` is the HTML page title.
     * The value of variable `text` is the selected text if some text is selected,
-      or the page URL if no text is selected.
-    * The value of the variable `url` is the link URL if selection contains a link AND
-      you initiate a copy with a context menu.
+      the link text if you open the context menu over a link,
+      or the page URL if no text is selected and you open the context menu not over a link.
+    * The value of the variable `url` is the link URL if selection contains a link.
       Otherwise, the value of variable `url` is the HTML page URL.
-         * Note it is always the HTML page URL if you use the toolbar button or the
-           keyboard shortcut to copy.
-           This behavior will be changed if I find a way to get a link URL in selection
-           when no context menu is selected.
     * No spaces are allowed between variable name and braces.
 * {{variable.s("foo","bar")}}
     * Which means variable.replace(new RegExp("foo", 'g'), "bar")
@@ -42,7 +33,7 @@ In format settings, you can use the mini template language.
     * You must escape the first argument for string and regexp.
       For example, .s("\\[","\\[") means replacing [ with \\[
     * You can chain multiple .s("foo","bar")
-* You can use the escape character \
+* You can use the escape character \ in strings.
 * Other characters are treated as literal strings.
 
 Here are examples:
@@ -82,7 +73,6 @@ Here are examples:
 * Due to web extension API limitations, this extension does not work as users might expect.
 * When you right click on a link without selecting text manually, {{text}} becomes the text of the *first* link of the same URL.
   * If there is another link of the same URL, {{text}} may be different than the text of you actually selected.
-* You cannot use the toolbar nor the keyboard shortcut if you want to copy a link URL. With those two, the URL always becomes the page URL.
 * Due to security reason, the limitation becomes severer on about: pages and addons.mozilla.org pages.
   * You cannot use the context menus nor the keyboard shortcut on those pages.
   * You can use the toolbar to copy the URL, but the text always become the page title even if you select some text.
