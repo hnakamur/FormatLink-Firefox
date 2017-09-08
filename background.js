@@ -64,6 +64,11 @@ async function tryToGetLinkSelectionText(tab, url, text) {
 function createContextMenu(defaultFormat) {
   return new Promise((resolve, reject) => {
     browser.contextMenus.create({
+      id: "format-link-format-default2",
+      title: "Format Link as " + "foo",
+      contexts: ["link", "selection", "page"],
+    });
+    browser.contextMenus.create({
       id: "format-link-format-default",
       title: "Format Link as " + defaultFormat,
       contexts: ["link", "selection", "page"],
