@@ -66,7 +66,7 @@ function createContextMenu(defaultFormat) {
     browser.contextMenus.create({
       id: "format-link-format-default",
       title: "Format Link as " + defaultFormat,
-      contexts: ["all"],
+      contexts: ["link", "selection", "page"],
     },
     () => {
       var err = browser.runtime.lastError;
