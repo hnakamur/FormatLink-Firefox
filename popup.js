@@ -64,7 +64,6 @@ function populateFormatGroup(options, url, title, selectedText) {
 
     group.appendChild(span);
   }
-
 }
 
 function populateText(options, formatId, url, title, selectedText) {
