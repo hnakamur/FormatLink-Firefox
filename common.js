@@ -22,10 +22,6 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
-async function saveDefaultFormat(format) {
-  return browser.storage.sync.set({defaultFormat: format});
-}
-
 async function gettingOptions() {
   var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {
@@ -38,18 +34,6 @@ async function gettingOptions() {
     options = DEFAULT_OPTIONS;
   }
   return options;
-}
-
-function getFormatCount(options) {
-  var i;
-  for (i = 1; i <= 9; ++i) {
-    var optTitle = options['title' + i];
-    var optFormat = options['format' + i];
-    if (optTitle === '' || optFormat === '') {
-      break;
-    }
-  }
-  return i - 1;
 }
 
 async function updateContextMenu(defaultFormat) {

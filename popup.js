@@ -1,7 +1,23 @@
+function getFormatCount(options) {
+  var i;
+  for (i = 1; i <= 9; ++i) {
+    var optTitle = options['title' + i];
+    var optFormat = options['format' + i];
+    if (optTitle === '' || optFormat === '') {
+      break;
+    }
+  }
+  return i - 1;
+}
+
 function populateFields(options, url, title, selectedText) {
   populateFormatGroup(options, url, title, selectedText);
   var formatId = options['defaultFormat'];
   populateText(options, formatId, url, title, selectedText);
+}
+
+async function saveDefaultFormat(format) {
+  return browser.storage.sync.set({defaultFormat: format});
 }
 
 function populateFormatGroup(options, url, title, selectedText) {

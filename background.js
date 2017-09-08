@@ -103,32 +103,3 @@ gettingOptions().then(async options => {
     console.error("failed to create context menu", err);
   };
 });
-
-browser.commands.onCommand.addListener(async (command) => {
-  if (command === 'format-link-in-default-format') {
-    var options = await gettingOptions();
-    var tabs = await browser.tabs.query({active: true, currentWindow: true});
-    if (tabs[0]) {
-      var tab = tabs[0];
-      try {
-        try {
-          var response = await browser.tabs.sendMessage(tab.id, {"method": "getSelection"});
-          var defaultFormatID = options['defaultFormat'];
-          var format = options['format' + defaultFormatID];
-          var url = tab.url;
-          var title = tab.title;
-          var text = response.selection;
-          return formatURLAndCopyToClipboard(format, url, title, text);
-        } catch (err) {
-          var defaultFormatID = options['defaultFormat'];
-          var format = options['format' + defaultFormatID];
-          var url = tab.url;
-          var title = tab.title;
-          return formatURLAndCopyToClipboard(format, url, title);
-        }
-      } catch (e) {
-        console.error("FormatLink extension failed to copy URL to clipboard.");
-      }
-    }
-  }
-});
