@@ -73,9 +73,7 @@ Here are examples:
 * Due to web extension API limitations, this extension does not work as users might expect.
 * When you right click on a link without selecting text manually, {{text}} becomes the text of the *first* link of the same URL.
   * If there is another link of the same URL, {{text}} may be different than the text of you actually selected.
-* Due to security reason, the limitation becomes severer on about: pages and addons.mozilla.org pages.
-  * You cannot use the context menus nor the keyboard shortcut on those pages.
-  * You can use the toolbar to copy the URL, but the text always become the page title even if you select some text.
+* Due to security reason, you cannot copy the URL on "about:" pages and addons.mozilla.org pages.
 
 ## License
 MIT License.
