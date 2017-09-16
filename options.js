@@ -1,53 +1,52 @@
-function getDefaultFormat() {
-  var select = document.getElementById('defaultFormat');
-  return select.children[select.selectedIndex].value;
-}
-
-function setDefaultFormat(value) {
-  var select = document.getElementById('defaultFormat');
-  var index = 0;
-  for (var i = 0; i < select.children.length; ++i) {
-    if (select.children[i].value == value) {
-      index = i;
-      break;
-    }
+async function restoreOptions() {
+  var options = await gettingOptions();
+  for (var i = 1; i <= 9; ++i) {
+    document.getElementById('title'+i).value = options['title'+i] || '';
+    document.getElementById('format'+i).value = options['format'+i] || '';
   }
-  select.selectedIndex = index;
 }
 
-function restoreOptions() {
-  gettingOptions().then(options => {
-    setDefaultFormat(options.defaultValue);
-    for (var i = 1; i <= 9; ++i) {
-      document.getElementById('title'+i).value = options['title'+i] || '';
-      document.getElementById('format'+i).value = options['format'+i] || '';
-    }
-  });
-}
-
-function saveOptions() {
-  var options = {defaultFormat: getDefaultFormat()}
+async function saveOptions(defaultFormatID) {
+  var options = {};
+  if (defaultFormatID) {
+    options.defaultFormat = defaultFormatID;
+  }
   for (var i = 1; i <= 9; ++i) {
     options['title'+i] = document.getElementById('title'+i).value;
     options['format'+i] = document.getElementById('format'+i).value;
   }
-  browser.storage.sync.set(options);
-  createContextMenus(options);
+  try {
+    await browser.storage.sync.set(options);
+    try {
+      var defaultFormat = options['title' + (options['defaultFormat'] || '1')];
+      await updateContextMenu(defaultFormat);
+    } catch (err) {
+      console.error("failed to update context menu", err);
+    }
+  } catch (err) {
+    console.error("failed to save options", err);
+  }
 }
 
-function restoreDefaults() {
+async function restoreDefaults() {
   for (var i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
   }
-  setDefaultFormat(DEFAULT_OPTIONS['defaultFormat']);
-  saveOptions();
+  return saveOptions(DEFAULT_OPTIONS['defaultFormat']);
 }
 
-function init() {
-  restoreOptions();
-  document.getElementById('saveButton').addEventListener('click', saveOptions);
-  document.getElementById('restoreDefaultsButton').addEventListener('click', restoreDefaults);
+async function init() {
+  await restoreOptions();
+  document.getElementById('saveButton').
+    addEventListener('click', function(e) {
+      e.preventDefault();
+      saveOptions();
+    });
+  document.getElementById('restoreDefaultsButton').
+    addEventListener('click', function(e) {
+      e.preventDefault();
+      restoreDefaults()
+    });
 }
-
 document.addEventListener('DOMContentLoaded', init);

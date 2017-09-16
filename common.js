@@ -1,7 +1,7 @@
 var FORMAT_MAX_COUNT = 9;
 
 var DEFAULT_OPTIONS = {
-  "defaultFormat": 1,
+  "defaultFormat": "1",
   "title1": "Markdown",
   "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\)\",\"%29\")}})",
   "title2": "reST",
@@ -22,58 +22,24 @@ var DEFAULT_OPTIONS = {
   "format9": ""
 };
 
-function saveDefaultFormat(format) {
-  browser.storage.sync.set({defaultFormat: format});
-}
-
-function gettingOptions() {
+async function gettingOptions() {
   var keys = ['defaultFormat'];
   for (var i = 1; i <= 9; ++i) {
     keys.push('title'+i);
     keys.push('format'+i);
   }
 
-  function onGot(item) {
-    var options = item;
-    if (!options.defaultFormat) {
-      options = DEFAULT_OPTIONS;
-    }
-    return Promise.resolve(options);
+  var options = await browser.storage.sync.get(keys);
+  if (!options.defaultFormat) {
+    options = DEFAULT_OPTIONS;
   }
-  function onErr(err) {
-    console.error('failed to load options', err);
-  }
-  return browser.storage.sync.get(keys).then(onGot, onErr);
+  return options;
 }
 
-function getFormatCount(options) {
-  var i;
-  for (i = 1; i <= 9; ++i) {
-    var optTitle = options['title' + i];
-    var optFormat = options['format' + i];
-    if (optTitle === '' || optFormat === '') {
-      break;
-    }
-  }
-  return i - 1;
-}
-
-function createContextMenus(options) {
-  browser.contextMenus.removeAll();
-  browser.contextMenus.create({
-    id: "format-link-format-default",
-    title: "as Default",
-    contexts: ["all"]
+async function updateContextMenu(defaultFormat) {
+  await browser.contextMenus.update("format-link-format-default", {
+    title: "Format Link as " + defaultFormat
   });
-  var cnt = getFormatCount(options);
-  var i;
-  for (i = 0; i < cnt; i++) {
-    browser.contextMenus.create({
-      id: "format-link-format" + (i + 1),
-      title: "as " + options["title" + (i + 1)],
-      contexts: ["all"]
-    });
-  }
 }
 
 function formatURL(format, url, title, selectedText) {

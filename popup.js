@@ -1,7 +1,23 @@
+function getFormatCount(options) {
+  var i;
+  for (i = 1; i <= 9; ++i) {
+    var optTitle = options['title' + i];
+    var optFormat = options['format' + i];
+    if (optTitle === '' || optFormat === '') {
+      break;
+    }
+  }
+  return i - 1;
+}
+
 function populateFields(options, url, title, selectedText) {
   populateFormatGroup(options, url, title, selectedText);
   var formatId = options['defaultFormat'];
   populateText(options, formatId, url, title, selectedText);
+}
+
+async function saveDefaultFormat(format) {
+  return browser.storage.sync.set({defaultFormat: format});
 }
 
 function populateFormatGroup(options, url, title, selectedText) {
@@ -9,6 +25,9 @@ function populateFormatGroup(options, url, title, selectedText) {
   var radios = [];
   var cnt = getFormatCount(options);
   var group = document.getElementById('formatGroup');
+  while (group.hasChildNodes()) {
+    group.removeChild(group.childNodes[0]);
+  }
   for (var i = 1; i <= cnt; ++i) {
     var radioId = 'format' + i;
 
@@ -20,11 +39,16 @@ function populateFormatGroup(options, url, title, selectedText) {
     if (i == defaultFormat) {
       btn.setAttribute('checked', 'checked');
     }
-    btn.addEventListener('click', e => {
-      gettingOptions().then(options => {
-        var formatId = e.target.value;
-        populateText(options, formatId, url, title, selectedText);
-      });
+    btn.addEventListener('click', async e => {
+      var formatId = e.target.value;
+      populateText(options, formatId, url, title, selectedText);
+      var defaultName = options['title' + formatId];
+      try {
+        await saveDefaultFormat(formatId);
+        await updateContextMenu(defaultName);
+      } catch (err) {
+        console.error("failed to update context menu", err);
+      }
     });
 
     var label = document.createElement('label');
@@ -52,34 +76,22 @@ function populateText(options, formatId, url, title, selectedText) {
   document.execCommand('copy');
 }
 
-function getSelectedFormat() {
-  for (var i = 1; i <= FORMAT_MAX_COUNT; ++i) {
-    var radio = document.getElementById('format' + i);
-    if (radio && radio.checked) {
-      return i;
+async function init() {
+  var options = await gettingOptions();
+  var res = await browser.storage.local.get("lastCopied");
+  var lastCopied = res.lastCopied;
+  if (lastCopied.url) {
+    return populateFields(options, lastCopied.url, lastCopied.title, lastCopied.selectedText);
+  }
+  var tabs = await browser.tabs.query({active: true, currentWindow: true});
+  if (tabs[0]) {
+    var tab = tabs[0];
+    var response = await browser.tabs.sendMessage(tab.id, {"method": "getSelection"});
+    try {
+      populateFields(options, tab.url, tab.title, response.selection);
+    } catch (err) {
+      populateFields(options, tab.url, tab.title);
     }
   }
-  return undefined;
 }
-
-function init() {
-  document.getElementById('saveDefaultFormatButton').addEventListener('click', () => {
-    saveDefaultFormat(getSelectedFormat());
-  });
-
-  browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
-    if (tabs[0]) {
-      var tab = tabs[0];
-      gettingOptions().then(options => {
-        browser.tabs.sendMessage(tab.id, {"method": "getSelection"}).
-        then(response => {
-          populateFields(options, tab.url, tab.title, response.selection);
-        }).catch(reason => {
-          populateFields(options, tab.url, tab.title);
-        });
-      });
-    }
-  });
-}
-
 document.addEventListener('DOMContentLoaded', init);
