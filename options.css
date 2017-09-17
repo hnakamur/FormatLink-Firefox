@@ -78,7 +78,11 @@ form > * {
   grid-row: 9;
   grid-column: 2;
 }
-#btnGroup {
+#createSubmenusRow {
   grid-row: 10;
+  grid-column: 1 / 3;
+}
+#btnGroup {
+  grid-row: 11;
   grid-column: 1 / 3;
 }

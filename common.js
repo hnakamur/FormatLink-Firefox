@@ -19,27 +19,67 @@ var DEFAULT_OPTIONS = {
   "title8": "",
   "format8": "",
   "title9": "",
-  "format9": ""
+  "format9": "",
+  "createSubmenus": false
 };
 
 async function gettingOptions() {
-  var keys = ['defaultFormat'];
-  for (var i = 1; i <= 9; ++i) {
-    keys.push('title'+i);
-    keys.push('format'+i);
-  }
-
-  var options = await browser.storage.sync.get(keys);
-  if (!options.defaultFormat) {
+  var options = await browser.storage.sync.get(null);
+  if (Object.keys(options).length === 0) {
     options = DEFAULT_OPTIONS;
   }
   return options;
 }
 
-async function updateContextMenu(defaultFormat) {
-  await browser.contextMenus.update("format-link-format-default", {
-    title: "Format Link as " + defaultFormat
+function getFormatCount(options) {
+  var i;
+  for (i = 1; i <= 9; ++i) {
+    var optTitle = options['title' + i];
+    var optFormat = options['format' + i];
+    if (optTitle === '' || optFormat === '') {
+      break;
+    }
+  }
+  return i - 1;
+}
+
+async function saveDefaultFormat(formatID) {
+  await browser.storage.sync.set({defaultFormat: formatID});
+}
+
+function creatingContextMenuItem(props) {
+  return new Promise((resolve, reject) => {
+    browser.contextMenus.create(props, () => {
+      var err = browser.runtime.lastError;
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
   });
+}
+
+async function createContextMenus(options) {
+  await browser.contextMenus.removeAll();
+  if (options.createSubmenus) {
+    var count = getFormatCount(options);
+    for (var i = 0; i < count; i++) {
+      var format = options['title' + (i + 1)];
+      await creatingContextMenuItem({
+        id: "format-link-format" + (i + 1),
+        title: "as " + format,
+        contexts: ["link", "selection", "page"]
+      });
+    }
+  } else {
+    var defaultFormat = options['title' + options['defaultFormat']];
+    await creatingContextMenuItem({
+      id: "format-link-format-default",
+      title: "Format Link as " + defaultFormat,
+      contexts: ["link", "selection", "page"]
+    });
+  }
 }
 
 function formatURL(format, url, title, selectedText) {

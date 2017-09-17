@@ -61,45 +61,31 @@ async function tryToGetLinkSelectionText(tab, url, text) {
   return response[0];
 }
 
-function createContextMenu(defaultFormat) {
-  return new Promise((resolve, reject) => {
-    browser.contextMenus.create({
-      id: "format-link-format-default",
-      title: "Format Link as " + defaultFormat,
-      contexts: ["link", "selection", "page"],
-    },
-    () => {
-      var err = browser.runtime.lastError;
-      if (err) {
-        reject(err);
-      } else {
-        browser.contextMenus.onClicked.addListener(async (info, tab) => {
-          if (info.menuItemId === "format-link-format-default") {
-            try {
-              var options = await gettingOptions();
-              var formatID = options["defaultFormat"];
-              var format = options['format' + formatID];
-              var url = info.linkUrl ? info.linkUrl : info.pageUrl;
-              var title = tab.title;
-              var text = info.selectionText;
-              var selText = await tryToGetLinkSelectionText(tab, url, text);
-              return formatURLAndCopyToClipboard(format, url, title, selText);
-            } catch (err) {
-              console.error("FormatLink extension failed to copy URL to clipboard.", err);
-            }
-          }
-        });
-        resolve();
-      }
-    })
-  });
-}
-
-gettingOptions().then(async options => {
+(async function() {
   try {
-    var defaultFormat = options['title' + (options['defaultFormat'] || "1")];
-    await createContextMenu(defaultFormat);
+    var options = await gettingOptions();
+    await createContextMenus(options);
+    browser.contextMenus.onClicked.addListener(async (info, tab) => {
+      if (info.menuItemId.startsWith("format-link-format")) {
+        try {
+          var options = await gettingOptions();
+          var formatID = info.menuItemId.substr("format-link-format".length);
+          if (formatID === "-default") {
+            formatID = options.defaultFormat;
+          }
+          var format = options['format' + formatID];
+          var url = info.linkUrl ? info.linkUrl : info.pageUrl;
+          var title = tab.title;
+          var text = info.selectionText;
+          var selText = await tryToGetLinkSelectionText(tab, url, text);
+          await formatURLAndCopyToClipboard(format, url, title, selText);
+          await saveDefaultFormat(formatID);
+        } catch (err) {
+          console.error("FormatLink extension failed to copy URL to clipboard.", err);
+        }
+      }
+    });
   } catch (err) {
     console.error("failed to create context menu", err);
   };
-});
+})();
