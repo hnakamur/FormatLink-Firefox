@@ -1,23 +1,7 @@
-function getFormatCount(options) {
-  var i;
-  for (i = 1; i <= 9; ++i) {
-    var optTitle = options['title' + i];
-    var optFormat = options['format' + i];
-    if (optTitle === '' || optFormat === '') {
-      break;
-    }
-  }
-  return i - 1;
-}
-
 function populateFields(options, url, title, selectedText) {
   populateFormatGroup(options, url, title, selectedText);
-  var formatId = options['defaultFormat'];
-  populateText(options, formatId, url, title, selectedText);
-}
-
-async function saveDefaultFormat(format) {
-  return browser.storage.sync.set({defaultFormat: format});
+  var formatID = options['defaultFormat'];
+  populateText(options, formatID, url, title, selectedText);
 }
 
 function populateFormatGroup(options, url, title, selectedText) {
@@ -40,14 +24,16 @@ function populateFormatGroup(options, url, title, selectedText) {
       btn.setAttribute('checked', 'checked');
     }
     btn.addEventListener('click', async e => {
-      var formatId = e.target.value;
-      populateText(options, formatId, url, title, selectedText);
-      var defaultName = options['title' + formatId];
-      try {
-        await saveDefaultFormat(formatId);
-        await updateContextMenu(defaultName);
-      } catch (err) {
-        console.error("failed to update context menu", err);
+      var formatID = e.target.value;
+      populateText(options, formatID, url, title, selectedText);
+      if (!options.createSubmenus) {
+        try {
+          await saveDefaultFormat(formatID);
+          options.defaultFormat = formatID;
+          await createContextMenus(options);
+        } catch (err) {
+          console.error("failed to update context menu", err);
+        }
       }
     });
 
@@ -66,8 +52,8 @@ function populateFormatGroup(options, url, title, selectedText) {
   }
 }
 
-function populateText(options, formatId, url, title, selectedText) {
-  var format = options['format' + formatId];
+function populateText(options, formatID, url, title, selectedText) {
+  var format = options['format' + formatID];
   var text = formatURL(format, url, title, selectedText);
   var textElem = document.getElementById('textToCopy');
   textElem.value = text;

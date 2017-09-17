@@ -10,6 +10,9 @@ To copy the URL, use the context menu.
 Open the context menu and select the "Format Link as XXX" menu item.
 XXX in the menu item label changes as you select the default format with the radio button in the popup page for the toolbar button.
 
+If you check the "Create submenus" in the options page and save the options,
+submenus for each format are created under the "Format Link" context menu group.
+
 ### toolbar button
 The popup page is shown when you press the toolbar button of "Format Link".
 You can change the format by clicking a radio button for each format which you registered in the options page.
