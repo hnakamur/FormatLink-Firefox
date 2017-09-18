@@ -1,6 +1,6 @@
 {
   "name": "Format Link",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "manifest_version": 2,
   "description": "Format a link and copy it to the clipboard.",
   "icons": {
@@ -25,17 +25,6 @@
     "default_popup": "popup.html",
     "browser_style": true
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "common.js",
-        "content.js"
-      ],
-      "run_at": "document_start",
-      "all_frames": true
-    }
-  ],
   "options_ui": {
     "page": "options.html"
   },
