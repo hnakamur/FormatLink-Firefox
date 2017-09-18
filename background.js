@@ -35,16 +35,8 @@ async function copyTextToClipboard(text) {
   }
 }
 
-async function tryToGetLinkSelectionText(tab, url, text) {
-  if (text) {
-    return text;
-  }
-  var response = await browser.tabs.sendMessage(tab.id, {"method": "getSelection"});
-  var selText = response.selection;
-  if (selText) {
-    return selText;
-  }
-  response = await browser.tabs.executeScript(tab.id, {
+async function getLinkText(url) {
+  response = await browser.tabs.executeScript({
     code: `
       var text = '';
       var links = document.querySelectorAll('a');
@@ -59,6 +51,17 @@ async function tryToGetLinkSelectionText(tab, url, text) {
     `
   });
   return response[0];
+}
+
+async function getSelectedText() {
+  var selection = await chrome.tabs.executeScript({
+    code: "window.getSelection().toString();"
+  });
+  var text;
+  if (selection && selection[0]) {
+    text = selection[0].trim().replace(/\s+/g, ' ');
+  }
+  return text;
 }
 
 (async function() {
@@ -77,9 +80,17 @@ async function tryToGetLinkSelectionText(tab, url, text) {
           var url = info.linkUrl ? info.linkUrl : info.pageUrl;
           var title = tab.title;
           var text = info.selectionText;
-          var selText = await tryToGetLinkSelectionText(tab, url, text);
-          await formatURLAndCopyToClipboard(format, url, title, selText);
-          await saveDefaultFormat(formatID);
+          if (!text) {
+            if (info.linkUrl) {
+              text = info.linkText ? info.linkText : await getLinkText(url);
+            } else {
+              text = title;
+            }
+          }
+          await formatURLAndCopyToClipboard(format, url, title, text);
+          if (formatID !== options.defaultFormat) {
+            await saveDefaultFormat(formatID);
+          }
         } catch (err) {
           console.error("FormatLink extension failed to copy URL to clipboard.", err);
         }

@@ -53,6 +53,9 @@ function populateFormatGroup(options, url, title, selectedText) {
 }
 
 function populateText(options, formatID, url, title, selectedText) {
+  if (!url) {
+    return;
+  }
   var format = options['format' + formatID];
   var text = formatURL(format, url, title, selectedText);
   var textElem = document.getElementById('textToCopy');
@@ -67,17 +70,9 @@ async function init() {
   var res = await browser.storage.local.get("lastCopied");
   var lastCopied = res.lastCopied;
   if (lastCopied.url) {
-    return populateFields(options, lastCopied.url, lastCopied.title, lastCopied.selectedText);
-  }
-  var tabs = await browser.tabs.query({active: true, currentWindow: true});
-  if (tabs[0]) {
-    var tab = tabs[0];
-    var response = await browser.tabs.sendMessage(tab.id, {"method": "getSelection"});
-    try {
-      populateFields(options, tab.url, tab.title, response.selection);
-    } catch (err) {
-      populateFields(options, tab.url, tab.title);
-    }
+    populateFields(options, lastCopied.url, lastCopied.title, lastCopied.selectedText);
+  } else {
+    populateFields(options);
   }
 }
 document.addEventListener('DOMContentLoaded', init);

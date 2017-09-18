@@ -37,6 +37,7 @@ async function restoreDefaults() {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
   }
+  document.getElementById('createSubmenusCheckbox').checked = DEFAULT_OPTIONS['createSubmenus'];
   return saveOptions(DEFAULT_OPTIONS['defaultFormat']);
 }
 
