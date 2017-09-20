@@ -69,7 +69,7 @@ async function createContextMenus(options) {
       await creatingContextMenuItem({
         id: "format-link-format" + (i + 1),
         title: "as " + format,
-        contexts: ["link", "selection", "page"]
+        contexts: ["all"]
       });
     }
   } else {
@@ -77,7 +77,7 @@ async function createContextMenus(options) {
     await creatingContextMenuItem({
       id: "format-link-format-default",
       title: "Format Link as " + defaultFormat,
-      contexts: ["link", "selection", "page"]
+      contexts: ["all"]
     });
   }
 }
