@@ -71,6 +71,9 @@ async function getSelectedText() {
     browser.contextMenus.onClicked.addListener(async (info, tab) => {
       if (info.menuItemId.startsWith("format-link-format")) {
         try {
+          await browser.tabs.executeScript({
+            file: "js/content-script.js",
+          });
           var options = await gettingOptions();
           var formatID = info.menuItemId.substr("format-link-format".length);
           if (formatID === "-default") {
