@@ -78,6 +78,7 @@ async function getSelectedText() {
           }
           var format = options['format' + formatID];
           var url = info.linkUrl ? info.linkUrl : info.pageUrl;
+          console.log('info', info);
           var title = tab.title;
           var text = info.selectionText;
           if (!text) {
