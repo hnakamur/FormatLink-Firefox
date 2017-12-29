@@ -1,5 +1,5 @@
-async function formatURLAndCopyToClipboard(format, url, title, selectedText) {
-  var formattedText = formatURL(format, url, title, selectedText);
+async function formatURLAndCopyToClipboard(format, url, title, selectedText, isWindows) {
+  var formattedText = formatURL(format, url, title, selectedText, isWindows);
   await copyTextToClipboard(formattedText);
   return browser.storage.local.set({
     lastCopied: {
@@ -66,6 +66,8 @@ async function getSelectedText() {
 
 (async function() {
   try {
+    const platformInfo = await browser.runtime.getPlatformInfo();
+    const isWindows = platformInfo.os === 'win';
     var options = await gettingOptions();
     await createContextMenus(options);
     browser.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -87,7 +89,7 @@ async function getSelectedText() {
               text = title;
             }
           }
-          await formatURLAndCopyToClipboard(format, url, title, text);
+          await formatURLAndCopyToClipboard(format, url, title, text, isWindows);
           if (formatID !== options.defaultFormat) {
             await saveDefaultFormat(formatID);
           }

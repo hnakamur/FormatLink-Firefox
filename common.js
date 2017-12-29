@@ -82,7 +82,7 @@ async function createContextMenus(options) {
   }
 }
 
-function formatURL(format, url, title, selectedText) {
+function formatURL(format, url, title, selectedText, isWindows) {
   var text = '';
   var work;
   var i = 0, len = format.length;
@@ -149,7 +149,7 @@ function formatURL(format, url, title, selectedText) {
   while (i < len) {
     if (parseLiteral('\\')) {
       if (parseLiteral('n')) {
-        text += "\n";
+        text += isWindows ? "\r\n" : "\n";
       } else if (parseLiteral('t')) {
         text += "\t";
       } else {
