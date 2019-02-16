@@ -36,7 +36,8 @@ In format settings, you can use the mini template language.
     * You must escape the first argument for string and regexp.
       For example, .s("\\[","\\[") means replacing [ with \\[
     * You can chain multiple .s("foo","bar")
-* You can use the escape character \ in strings.
+* You can use the escape character \ in strings. For example, you need to escape `\` with `\` like `\\`,
+  and also you need to escape `{` with `\` like `\{`. See the LaTeX example below.
 * Other characters are treated as literal strings.
 
 Here are examples:
@@ -69,6 +70,12 @@ Here are examples:
 
 ```
 "{{title.s("\"","&quot;").s("\\[","&#91;")}}":{{url}}
+```
+
+* LaTeX
+
+```
+\\href\{{{url}}\}\{{{text}}\}
 ```
 
 ## KNOWN LIMITATIONS
