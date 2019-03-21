@@ -4,9 +4,21 @@
 To format the link of the active tab instantly to use in Markdown, reST, HTML, Text, Textile or other formats.
 
 ## How to use
+You can use keyboard shortcuts, context menus, or the toolbar button of Format Link extension
+to copy a link in the specified format. Before doing that, you can optionally select some text 
+which may or may not contain a link.
+
+### keyboard shortcut
+The keyboard shortcut for "Copy a link in the default format" is shortcut for clicking the
+toolbar button. The link is copied in the default format and the popup is shown under
+the toolbar button.
+
+Also there are shortcuts for copying in the link in the corresponding format regardless of
+the default format.
+
+See [Manage extension shortcuts in Firefox | Firefox Help](https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox) for showing and changing keyboard shortcuts.
 
 ### context menu
-To copy the URL, use the context menu.
 Open the context menu and select the "Format Link as XXX" menu item.
 XXX in the menu item label changes as you select the default format with the radio button in the popup page for the toolbar button.
 
@@ -14,8 +26,12 @@ If you check the "Create submenus" in the options page and save the options,
 submenus for each format are created under the "Format Link" context menu group.
 
 ### toolbar button
-The popup page is shown when you press the toolbar button of "Format Link".
-You can change the format by clicking a radio button for each format which you registered in the options page.
+When you press the toolbar button of "Format Link", the link is copied in the default format,
+the popup page becomes open, and the formatted text is shown in the text area.
+
+If you want to copy the link in different format, you can press one of the radio buttons.
+
+Also if you want to change the default format, you can press the "Set as default" button.
 
 ## Flexible settings
 You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "Format Link" Extension.
@@ -27,7 +43,7 @@ In format settings, you can use the mini template language.
     * The value of variable `text` is the selected text if some text is selected,
       the link text if you open the context menu over a link,
       or the page URL if no text is selected and you open the context menu not over a link.
-    * The value of the variable `url` is the link URL if selection contains a link.
+    * The value of the variable `url` is the URL of the first link if selection contains a link.
       Otherwise, the value of variable `url` is the HTML page URL.
     * No spaces are allowed between variable name and braces.
 * {{variable.s("foo","bar")}}
@@ -80,10 +96,7 @@ Here are examples:
 
 ## KNOWN LIMITATIONS
 
-* Due to web extension API limitations, this extension does not work as users might expect.
-* When you right click on a link without selecting text manually, {{text}} becomes the text of the *first* link of the same URL.
-  * If there is another link of the same URL, {{text}} may be different than the text of you actually selected.
-* Due to security reason, you cannot copy the URL on "about:" pages and addons.mozilla.org pages.
+* Due to security reason, you cannot copy the URL on some pages like addons.mozilla.org. See [Content scripts - Mozilla | MDN](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) for details.
 
 ## License
 MIT License.
