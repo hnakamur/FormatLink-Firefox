@@ -61,14 +61,14 @@ async function copyLinkToClipboard(format, linkUrl, linkText) {
       });
     }
     // clipboard-helper.js defines functions FormatLink_formatLinkAsText
-		// and FormatLink_copyLinkToClipboard.
+    // and FormatLink_copyLinkToClipboard.
     const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
 
     let code = 'FormatLink_formatLinkAsText(' + JSON.stringify(format) + ',' +
-		  JSON.stringify(newline) + ',' +
-		  (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
-		  (linkText ? JSON.stringify(linkText) + ',' : '') + 
-			');';
+      JSON.stringify(newline) + ',' +
+      (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
+      (linkText ? JSON.stringify(linkText) + ',' : '') + 
+      ');';
     const result = await browser.tabs.executeScript({code});
     const formattedText = result[0];
 
@@ -80,7 +80,7 @@ async function copyLinkToClipboard(format, linkUrl, linkText) {
     // This could happen if the extension is not allowed to run code in
     // the page, for example if the tab is a privileged page.
     console.error('Failed to copy text: ' + err);
-		alert('Failed to copy text: ' + err);
+    alert('Failed to copy text: ' + err);
   }
 }
 
