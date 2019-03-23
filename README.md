@@ -43,14 +43,14 @@ In format settings, you can use the mini template language.
     * The value of variable `text` is the selected text if some text is selected,
       the link text if you open the context menu over a link,
       or the page URL if no text is selected and you open the context menu not over a link.
-    * The value of the variable `url` is the URL of the first link if selection contains a link.
-      Otherwise, the value of variable `url` is the HTML page URL.
+    * The value of the variable `url` is the link if you open the context menu over a link,
+      the first link if selection contains a link, or the HTML page URL otherwise.
     * No spaces are allowed between variable name and braces.
 * {{variable.s("foo","bar")}}
-    * Which means variable.replace(new RegExp("foo", 'g'), "bar")
+    * Which means `variable.replace(new RegExp("foo", 'g'), "bar")`
     * You can use escape character \ in strings.
     * You must escape the first argument for string and regexp.
-      For example, .s("\\[","\\[") means replacing [ with \\[
+      For example, `.s("\\[","\\[")` means replacing `\[` with `\\[`
     * You can chain multiple .s("foo","bar")
 * You can use the escape character \ in strings. For example, you need to escape `\` with `\` like `\\`,
   and also you need to escape `{` with `\` like `\{`. See the LaTeX example below.
