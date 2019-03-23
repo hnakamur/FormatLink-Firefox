@@ -20,7 +20,7 @@ const DEFAULT_OPTIONS = {
   "format8": "",
   "title9": "",
   "format9": "",
-  "createSubmenus": true
+  "createSubmenus": false
 };
 
 async function gettingOptions() {
