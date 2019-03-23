@@ -58,9 +58,12 @@ function getSelectedFormatID() {
 
 async function init() {
   document.getElementById('saveDefaultFormatButton').addEventListener('click', async () => {
-    let format = getSelectedFormatID();
-    if (format) {
-      await saveDefaultFormat(format);
+    let formatID = getSelectedFormatID();
+    if (formatID) {
+      await browser.runtime.sendMessage({
+        messageID: 'update-default-format',
+        formatID
+      });
     }
   });
 

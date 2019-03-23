@@ -49,7 +49,7 @@ async function saveDefaultFormat(formatID) {
 
 async function copyLinkToClipboard(format, linkUrl, linkText) {
   try {
-    var results = await browser.tabs.executeScript({
+    const results = await browser.tabs.executeScript({
       code: "typeof FormatLink_copyLinkToClipboard === 'function';",
     });
     // The content script's last expression will be true if the function
@@ -87,7 +87,7 @@ async function copyLinkToClipboard(format, linkUrl, linkText) {
 function creatingContextMenuItem(props) {
   return new Promise((resolve, reject) => {
     browser.contextMenus.create(props, () => {
-      var err = browser.runtime.lastError;
+      const err = browser.runtime.lastError;
       if (err) {
         reject(err);
       } else {
@@ -100,9 +100,9 @@ function creatingContextMenuItem(props) {
 async function createContextMenus(options) {
   await browser.contextMenus.removeAll();
   if (options.createSubmenus) {
-    var count = getFormatCount(options);
-    for (var i = 0; i < count; i++) {
-      var format = options['title' + (i + 1)];
+    const count = getFormatCount(options);
+    for (let i = 0; i < count; i++) {
+      let format = options['title' + (i + 1)];
       await creatingContextMenuItem({
         id: "format-link-format" + (i + 1),
         title: "as " + format,
@@ -110,7 +110,7 @@ async function createContextMenus(options) {
       });
     }
   } else {
-    var defaultFormat = options['title' + options['defaultFormat']];
+    const defaultFormat = options['title' + options['defaultFormat']];
     await creatingContextMenuItem({
       id: "format-link-format-default",
       title: "Format Link as " + defaultFormat,
