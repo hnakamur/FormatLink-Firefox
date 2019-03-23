@@ -31,18 +31,14 @@ function populateFormatGroup(options) {
       populateText(formattedText);
     });
 
-    let label = document.createElement('label');
-    label.setAttribute('for', radioId);
     let optTitle = options['title' + i];
     let text = document.createTextNode(optTitle);
+
+    let label = document.createElement('label');
+    label.appendChild(btn);
     label.appendChild(text);
 
-    let span = document.createElement('span')
-    span.setAttribute('class', 'radio');
-    span.appendChild(btn);
-    span.appendChild(label);
-
-    group.appendChild(span);
+    group.appendChild(label);
   }
 }
 
