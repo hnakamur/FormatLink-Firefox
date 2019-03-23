@@ -17,37 +17,8 @@ function FormatLink_copyTextToClipboard(text) {
 }
 
 function FormatLink_formatLinkAsText(format, newline, linkUrl, linkText) {
-	function getFirstLinkInRange(range) {
-		let href = '';
-
-		function getNextNode(node, endNode) {
-			if (node.firstChild) {
-				return node.firstChild;
-			}
-
-			while (node) {
-				if (node.nextSibling) {
-					return node.nextSibling;
-				}
-				node = node.parentNode;
-				if (node === endNode) {
-					return node;
-				}
-			}
-		};
-
-		let endNode = range.endContainer;
-		for (let node = range.startContainer; node; node = getNextNode(node, endNode)) {
-			if (node.tagName === 'A') {
-				href = node.href;
-				break;
-			}
-
-			if (node === endNode) {
-				break;
-			}
-		}
-		return href;
+	function getFirstLinkInSelection(selection) {
+	  return selection.anchorNode.parentNode.href;
 	}
 
 	function formatURL(format, url, title, selectedText, newline) {
@@ -149,8 +120,7 @@ function FormatLink_formatLinkAsText(format, newline, linkUrl, linkText) {
 			text = selectionText;
 		}
 
-		let range = selection.getRangeAt(0);
-		let hrefInSelection = getFirstLinkInRange(range);
+	  let hrefInSelection = getFirstLinkInSelection(selection);
 		if (!href && hrefInSelection) {
 			href = hrefInSelection;
 		}
