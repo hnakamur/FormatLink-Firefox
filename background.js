@@ -1,3 +1,7 @@
+async function saveDefaultFormat(formatID) {
+  await browser.storage.sync.set({defaultFormat: formatID});
+}
+
 (async function() {
   browser.commands.onCommand.addListener(async (command) => {
     try {
