@@ -20,7 +20,7 @@ See [Manage extension shortcuts in Firefox | Firefox Help](https://support.mozil
 
 ### context menu
 Open the context menu and select the "Format Link as XXX" menu item.
-XXX in the menu item label changes as you select the default format with the radio button in the popup page for the toolbar button.
+"XXX" in the menu item label changes as you change the default format by clicking the "Set as default" button in the popup page for the toolbar button.
 
 If you check the "Create submenus" in the options page and save the options,
 submenus for each format are created under the "Format Link" context menu group.
