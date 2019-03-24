@@ -1,6 +1,6 @@
 async function restoreOptions() {
-  var options = await gettingOptions();
-  for (var i = 1; i <= 9; ++i) {
+  const options = await gettingOptions();
+  for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = options['title'+i] || '';
     document.getElementById('format'+i).value = options['format'+i] || '';
   }
@@ -8,11 +8,11 @@ async function restoreOptions() {
 }
 
 async function saveOptions(defaultFormatID) {
-  var options;
+  let options;
   try {
     options = defaultFormatID ?
       {'defaultFormat': defaultFormatID} : await gettingOptions();
-    for (var i = 1; i <= 9; ++i) {
+    for (let i = 1; i <= 9; ++i) {
       options['title'+i] = document.getElementById('title'+i).value;
       options['format'+i] = document.getElementById('format'+i).value;
     }
@@ -33,7 +33,7 @@ async function saveOptions(defaultFormatID) {
 }
 
 async function restoreDefaults() {
-  for (var i = 1; i <= 9; ++i) {
+  for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
   }

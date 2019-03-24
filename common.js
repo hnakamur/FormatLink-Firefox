@@ -1,6 +1,6 @@
-var FORMAT_MAX_COUNT = 9;
+const FORMAT_MAX_COUNT = 9;
 
-var DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS = {
   "defaultFormat": "1",
   "title1": "Markdown",
   "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\)\",\"%29\")}})",
@@ -10,8 +10,8 @@ var DEFAULT_OPTIONS = {
   "format3": "{{text}}\\n{{url}}",
   "title4": 'HTML',
   "format4": "<a href=\"{{url.s(\"\\\"\",\"&quot;\")}}\">{{text.s(\"<\",\"&lt;\")}}</a>",
-  "title5": "",
-  "format5": "",
+  "title5": "LaTeX",
+  "format5": "\\\\href\\{{{url}}\\}\\{{{text}}\\}",
   "title6": "",
   "format6": "",
   "title7": "",
@@ -24,7 +24,7 @@ var DEFAULT_OPTIONS = {
 };
 
 async function gettingOptions() {
-  var options = await browser.storage.sync.get(null);
+  const options = await browser.storage.sync.get(null);
   if (Object.keys(options).length === 0) {
     options = DEFAULT_OPTIONS;
   }
@@ -32,10 +32,10 @@ async function gettingOptions() {
 }
 
 function getFormatCount(options) {
-  var i;
+  let i;
   for (i = 1; i <= 9; ++i) {
-    var optTitle = options['title' + i];
-    var optFormat = options['format' + i];
+    let optTitle = options['title' + i];
+    let optFormat = options['format' + i];
     if (optTitle === '' || optFormat === '') {
       break;
     }
@@ -43,14 +43,47 @@ function getFormatCount(options) {
   return i - 1;
 }
 
-async function saveDefaultFormat(formatID) {
-  await browser.storage.sync.set({defaultFormat: formatID});
+async function copyLinkToClipboard(format, linkUrl, linkText) {
+  try {
+    const results = await browser.tabs.executeScript({
+      code: "typeof FormatLink_copyLinkToClipboard === 'function';",
+    });
+    // The content script's last expression will be true if the function
+    // has been defined. If this is not the case, then we need to run
+    // clipboard-helper.js to define function copyToClipboard.
+    if (!results || results[0] !== true) {
+      await browser.tabs.executeScript({
+        file: "clipboard-helper.js",
+      });
+    }
+    // clipboard-helper.js defines functions FormatLink_formatLinkAsText
+    // and FormatLink_copyLinkToClipboard.
+    const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
+
+    let code = 'FormatLink_formatLinkAsText(' + JSON.stringify(format) + ',' +
+      JSON.stringify(newline) + ',' +
+      (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
+      (linkText ? JSON.stringify(linkText) + ',' : '') + 
+      ');';
+    const result = await browser.tabs.executeScript({code});
+    const formattedText = result[0];
+
+    code = 'FormatLink_copyTextToClipboard(' + JSON.stringify(formattedText) + ');';
+    await browser.tabs.executeScript({code});
+
+    return formattedText;
+  } catch (err) {
+    // This could happen if the extension is not allowed to run code in
+    // the page, for example if the tab is a privileged page.
+    console.error('Failed to copy text: ' + err);
+    alert('Failed to copy text: ' + err);
+  }
 }
 
 function creatingContextMenuItem(props) {
   return new Promise((resolve, reject) => {
     browser.contextMenus.create(props, () => {
-      var err = browser.runtime.lastError;
+      const err = browser.runtime.lastError;
       if (err) {
         reject(err);
       } else {
@@ -63,9 +96,9 @@ function creatingContextMenuItem(props) {
 async function createContextMenus(options) {
   await browser.contextMenus.removeAll();
   if (options.createSubmenus) {
-    var count = getFormatCount(options);
-    for (var i = 0; i < count; i++) {
-      var format = options['title' + (i + 1)];
+    const count = getFormatCount(options);
+    for (let i = 0; i < count; i++) {
+      let format = options['title' + (i + 1)];
       await creatingContextMenuItem({
         id: "format-link-format" + (i + 1),
         title: "as " + format,
@@ -73,99 +106,11 @@ async function createContextMenus(options) {
       });
     }
   } else {
-    var defaultFormat = options['title' + options['defaultFormat']];
+    const defaultFormat = options['title' + options['defaultFormat']];
     await creatingContextMenuItem({
       id: "format-link-format-default",
       title: "Format Link as " + defaultFormat,
       contexts: ["all"]
     });
   }
-}
-
-function formatURL(format, url, title, selectedText, isWindows) {
-  var text = '';
-  var work;
-  var i = 0, len = format.length;
-
-  function parseLiteral(str) {
-    if (format.substr(i, str.length) === str) {
-      i += str.length;
-      return str;
-    } else {
-      return null;
-    }
-  }
-
-  function parseString() {
-    var str = '';
-    if (parseLiteral('"')) {
-      while (i < len) {
-        if (parseLiteral('\\')) {
-          if (i < len) {
-            str += format.substr(i++, 1);
-          } else {
-            throw new Error('parse error expected "');
-          }
-        } else if (parseLiteral('"')) {
-          return str;
-        } else {
-          if (i < len) {
-            str += format.substr(i++, 1);
-          } else {
-            throw new Error('parse error expected "');
-          }
-        }
-      }
-    } else {
-      return null;
-    }
-  }
-
-  function processVar(value) {
-    var work = value;
-    while (i < len) {
-      if (parseLiteral('.s(')) {
-        var arg1 = parseString();
-        if (arg1 && parseLiteral(',')) {
-          var arg2 = parseString();
-          if (arg2 && parseLiteral(')')) {
-            var regex = new RegExp(arg1, 'g');
-            work = work.replace(regex, arg2);
-          } else {
-            throw new Error('parse error');
-          }
-        } else {
-          throw new Error('parse error');
-        }
-      } else if (parseLiteral('}}')) {
-        text += work;
-        return;
-      } else {
-        throw new Error('parse error');
-      }
-    }
-  }
-
-  while (i < len) {
-    if (parseLiteral('\\')) {
-      if (parseLiteral('n')) {
-        text += isWindows ? "\r\n" : "\n";
-      } else if (parseLiteral('t')) {
-        text += "\t";
-      } else {
-        text += format.substr(i++, 1);
-      }
-    } else if (parseLiteral('{{')) {
-      if (parseLiteral('title')) {
-        processVar(title);
-      } else if (parseLiteral('url')) {
-        processVar(url);
-      } else if (parseLiteral('text')) {
-        processVar(selectedText ? selectedText : title);
-      }
-    } else {
-      text += format.substr(i++, 1);
-    }
-  }
-  return text;
 }
