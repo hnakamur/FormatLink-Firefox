@@ -50,9 +50,9 @@ function FormatLink_formatLinkAsText(format, newline, linkUrl, linkText) {
       while (i < len) {
         if (parseLiteral('.s(')) {
           let arg1 = parseString();
-          if (arg1 && parseLiteral(',')) {
+          if (arg1 != null && parseLiteral(',')) {
             let arg2 = parseString();
-            if (arg2 && parseLiteral(')')) {
+            if (arg2 != null && parseLiteral(')')) {
               let regex = new RegExp(arg1, 'g');
               work = work.replace(regex, arg2);
             } else {
