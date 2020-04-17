@@ -68,8 +68,8 @@ async function copyLinkToClipboard(format, linkUrl, linkText) {
     const result = await browser.tabs.executeScript({code});
     const formattedText = result[0];
 
-    code = 'FormatLink_copyTextToClipboard(' + JSON.stringify(formattedText) + ');';
-    await browser.tabs.executeScript({code});
+    await navigator.clipboard.writeText(formattedText);
+    console.log('clipboard successfully set by FormatLink');
 
     return formattedText;
   } catch (err) {
