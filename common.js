@@ -24,7 +24,7 @@ const DEFAULT_OPTIONS = {
 };
 
 async function gettingOptions() {
-  const options = await browser.storage.sync.get(null);
+  let options = await browser.storage.sync.get(null);
   if (Object.keys(options).length === 0) {
     options = DEFAULT_OPTIONS;
   }
