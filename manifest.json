@@ -1,6 +1,6 @@
 {
   "name": "Format Link",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "manifest_version": 2,
   "description": "Format a link and copy it to the clipboard.",
   "icons": {
