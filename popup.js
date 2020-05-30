@@ -27,7 +27,8 @@ function populateFormatGroup(options) {
     btn.addEventListener('click', async e => {
       const formatID = e.target.value;
       const format = options['format' + formatID];
-      const formattedText = await copyLinkToClipboard(format);
+      const asHTML = options['html' + formatID];
+      const formattedText = await copyLinkToClipboard(format, asHTML);
       populateText(formattedText);
     });
 
@@ -65,7 +66,8 @@ async function init() {
 
   const options = await gettingOptions();
   const format = options['format' + options.defaultFormat];
-  let formattedText = await copyLinkToClipboard(format);
+  const asHTML = options['html' + options.defaultFormat];
+  let formattedText = await copyLinkToClipboard(format, asHTML);
   populateText(formattedText);
   populateFormatGroup(options);
 }
