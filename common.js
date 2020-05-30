@@ -3,23 +3,32 @@ const FORMAT_MAX_COUNT = 9;
 const DEFAULT_OPTIONS = {
   "defaultFormat": "1",
   "title1": "Markdown",
-  "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\)\",\"%29\")}})",
+  "format1": "[{{text.s(\"\\\\[\",\"\\\\[\").s(\"\\\\]\",\"\\\\]\")}}]({{url.s(\"\\\\(\",\"%28\").s(\"\\\\)\",\"%29\")}})",
+  "html1": 0,
   "title2": "reST",
   "format2": "`{{text}} <{{url}}>`_",
+  "html2": 0,
   "title3": "Text",
   "format3": "{{text}}\\n{{url}}",
+  "html3": 0,
   "title4": 'HTML',
   "format4": "<a href=\"{{url.s(\"\\\"\",\"&quot;\")}}\">{{text.s(\"<\",\"&lt;\")}}</a>",
+  "html4": 1,
   "title5": "LaTeX",
   "format5": "\\\\href\\{{{url}}\\}\\{{{text}}\\}",
+  "html5": 0,
   "title6": "",
   "format6": "",
+  "html6": 0,
   "title7": "",
   "format7": "",
+  "html7": 0,
   "title8": "",
   "format8": "",
+  "html8": 0,
   "title9": "",
   "format9": "",
+  "html9": 0,
   "createSubmenus": false
 };
 
@@ -43,10 +52,10 @@ function getFormatCount(options) {
   return i - 1;
 }
 
-async function copyLinkToClipboard(format, linkUrl, linkText) {
+async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
   try {
     const results = await browser.tabs.executeScript({
-      code: "typeof FormatLink_copyLinkToClipboard === 'function';",
+      code: "typeof FormatLink_formatLink === 'function';",
     });
     // The content script's last expression will be true if the function
     // has been defined. If this is not the case, then we need to run
@@ -60,18 +69,25 @@ async function copyLinkToClipboard(format, linkUrl, linkText) {
     // and FormatLink_copyLinkToClipboard.
     const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
 
-    let code = 'FormatLink_formatLinkAsText(' + JSON.stringify(format) + ',' +
+    console.log('before calling FormatLink_formatLink');
+    let code = 'FormatLink_formatLink(' + JSON.stringify(format) + ',' +
       JSON.stringify(newline) + ',' +
       (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
       (linkText ? JSON.stringify(linkText) + ',' : '') + 
       ');';
     const result = await browser.tabs.executeScript({code});
-    const formattedText = result[0];
+    const data = result[0];
 
-    await navigator.clipboard.writeText(formattedText);
+    if (asHTML) {
+      await browser.tabs.executeScript({
+        code: 'FormatLink_copyHTMLToClipboard(' + JSON.stringify(data) + ');'
+      });
+    } else {
+      await navigator.clipboard.writeText(data);
+    }
     console.log('clipboard successfully set by FormatLink');
 
-    return formattedText;
+    return data;
   } catch (err) {
     // This could happen if the extension is not allowed to run code in
     // the page, for example if the tab is a privileged page.

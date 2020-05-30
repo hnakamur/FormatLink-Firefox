@@ -3,6 +3,7 @@ async function restoreOptions() {
   for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = options['title'+i] || '';
     document.getElementById('format'+i).value = options['format'+i] || '';
+    document.getElementById('html'+i).checked = !!options['html'+i];
   }
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
 }
@@ -15,6 +16,7 @@ async function saveOptions(defaultFormatID) {
     for (let i = 1; i <= 9; ++i) {
       options['title'+i] = document.getElementById('title'+i).value;
       options['format'+i] = document.getElementById('format'+i).value;
+      options['html'+i] = document.getElementById('html'+i).checked ? 1 : 0;
     }
     options['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
   } catch (err) {
@@ -36,6 +38,7 @@ async function restoreDefaults() {
   for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
+    document.getElementById('html'+i).value = DEFAULT_OPTIONS['html'+i] || 0;
   }
   document.getElementById('createSubmenusCheckbox').checked = DEFAULT_OPTIONS['createSubmenus'];
   return saveOptions(DEFAULT_OPTIONS['defaultFormat']);
