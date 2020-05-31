@@ -69,7 +69,6 @@ async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
     // and FormatLink_copyLinkToClipboard.
     const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
 
-    console.log('before calling FormatLink_formatLink');
     let code = 'FormatLink_formatLink(' + JSON.stringify(format) + ',' +
       JSON.stringify(newline) + ',' +
       (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
@@ -78,6 +77,7 @@ async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
     const result = await browser.tabs.executeScript({code});
     const data = result[0];
 
+    console.log('before copying to clipboard, data=', data, ', asHTML=', asHTML);
     if (asHTML) {
       await browser.tabs.executeScript({
         code: 'FormatLink_copyHTMLToClipboard(' + JSON.stringify(data) + ');'

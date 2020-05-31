@@ -31,7 +31,7 @@ async function saveDefaultFormat(formatID) {
             formatID = options.defaultFormat;
           }
           const format = options['format' + formatID];
-          const isHTML = options['html' + formatID];
+          const asHTML = options['html' + formatID];
           await copyLinkToClipboard(format, asHTML, info.linkUrl, info.linkText);
         } catch (err) {
           console.error("FormatLink extension failed to copy URL to clipboard.", err);
