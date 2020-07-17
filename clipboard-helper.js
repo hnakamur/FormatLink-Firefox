@@ -101,6 +101,8 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
           processVar(title);
         } else if (parseLiteral('url')) {
           processVar(url);
+        } else if (parseLiteral('page_url')) {
+          processVar(window.location.href);
         } else if (parseLiteral('text')) {
           processVar(selectedText ? selectedText : title);
         }
