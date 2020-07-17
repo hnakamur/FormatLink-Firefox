@@ -59,14 +59,14 @@ async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
     });
     // The content script's last expression will be true if the function
     // has been defined. If this is not the case, then we need to run
-    // clipboard-helper.js to define function copyToClipboard.
+    // clipboard-helper.js to define functions FormatLink_formatLink
+    // and FormatLink_copyHTMLToClipboard.
     if (!results || results[0] !== true) {
       await browser.tabs.executeScript({
         file: "clipboard-helper.js",
       });
     }
-    // clipboard-helper.js defines functions FormatLink_formatLinkAsText
-    // and FormatLink_copyLinkToClipboard.
+
     const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
 
     let code = 'FormatLink_formatLink(' + JSON.stringify(format) + ',' +

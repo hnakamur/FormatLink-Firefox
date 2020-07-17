@@ -119,7 +119,7 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
   let selection = window.getSelection();
   if (selection.rangeCount > 0) {
     let selectionText = selection.toString().trim();
-    if (!text && selectionText) {
+    if (selectionText) {
       text = selectionText;
     }
 
