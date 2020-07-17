@@ -9,7 +9,7 @@ function FormatLink_copyHTMLToClipboard(text) {
     // Overwrite the clipboard content.
     event.preventDefault();
     event.clipboardData.setData("text/plain", text);
-		event.clipboardData.setData("text/html", text);
+    event.clipboardData.setData("text/html", text);
   }
   document.addEventListener("copy", oncopy, true);
 
@@ -101,6 +101,8 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
           processVar(title);
         } else if (parseLiteral('url')) {
           processVar(url);
+        } else if (parseLiteral('page_url')) {
+          processVar(window.location.href);
         } else if (parseLiteral('text')) {
           processVar(selectedText ? selectedText : title);
         }
@@ -117,7 +119,7 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
   let selection = window.getSelection();
   if (selection.rangeCount > 0) {
     let selectionText = selection.toString().trim();
-    if (!text && selectionText) {
+    if (selectionText) {
       text = selectionText;
     }
 
