@@ -9,7 +9,7 @@ function FormatLink_copyHTMLToClipboard(text) {
     // Overwrite the clipboard content.
     event.preventDefault();
     event.clipboardData.setData("text/plain", text);
-		event.clipboardData.setData("text/html", text);
+    event.clipboardData.setData("text/html", text);
   }
   document.addEventListener("copy", oncopy, true);
 
