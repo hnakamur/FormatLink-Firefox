@@ -121,11 +121,11 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
     let selectionText = selection.toString().trim();
     if (selectionText) {
       text = selectionText;
-    }
 
-    let hrefInSelection = getFirstLinkInSelection(selection);
-    if (!href && hrefInSelection) {
-      href = hrefInSelection;
+      let hrefInSelection = getFirstLinkInSelection(selection);
+      if (!href && hrefInSelection) {
+        href = hrefInSelection;
+      }
     }
   }
   if (!text) {
