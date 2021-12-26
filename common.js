@@ -29,6 +29,7 @@ const DEFAULT_OPTIONS = {
   "title9": "",
   "format9": "",
   "html9": 0,
+  "enableContextMenus": true,
   "createSubmenus": false
 };
 
@@ -111,22 +112,24 @@ function creatingContextMenuItem(props) {
 
 async function createContextMenus(options) {
   await browser.contextMenus.removeAll();
-  if (options.createSubmenus) {
-    const count = getFormatCount(options);
-    for (let i = 0; i < count; i++) {
-      let format = options['title' + (i + 1)];
+  if (options.enableContextMenus) {
+    if (options.createSubmenus) {
+      const count = getFormatCount(options);
+      for (let i = 0; i < count; i++) {
+        let format = options['title' + (i + 1)];
+        await creatingContextMenuItem({
+          id: "format-link-format" + (i + 1),
+          title: "as " + format,
+          contexts: ["all"]
+        });
+      }
+    } else {
+      const defaultFormat = options['title' + options['defaultFormat']];
       await creatingContextMenuItem({
-        id: "format-link-format" + (i + 1),
-        title: "as " + format,
+        id: "format-link-format-default",
+        title: "Format Link as " + defaultFormat,
         contexts: ["all"]
       });
     }
-  } else {
-    const defaultFormat = options['title' + options['defaultFormat']];
-    await creatingContextMenuItem({
-      id: "format-link-format-default",
-      title: "Format Link as " + defaultFormat,
-      contexts: ["all"]
-    });
   }
 }

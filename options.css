@@ -12,9 +12,9 @@ input {
 .label {
   font-weight: bold;
 }
-#createSubmenusRow {
+.checkboxRow {
   grid-column: span 3;
 }
-#btnGroup {
+.btnGroup {
   grid-column: span 3;
 }
