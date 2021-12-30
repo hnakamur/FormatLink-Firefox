@@ -5,6 +5,7 @@ async function restoreOptions() {
     document.getElementById('format'+i).value = options['format'+i] || '';
     document.getElementById('html'+i).checked = !!options['html'+i];
   }
+  document.getElementById('enableContextMenusCheckbox').checked = options['enableContextMenus'];
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
 }
 
@@ -18,6 +19,7 @@ async function saveOptions(defaultFormatID) {
       options['format'+i] = document.getElementById('format'+i).value;
       options['html'+i] = document.getElementById('html'+i).checked ? 1 : 0;
     }
+    options['enableContextMenus'] = document.getElementById('enableContextMenusCheckbox').checked;
     options['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
   } catch (err) {
     console.error("failed to get options", err);
@@ -40,12 +42,18 @@ async function restoreDefaults() {
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
     document.getElementById('html'+i).value = DEFAULT_OPTIONS['html'+i] || 0;
   }
+  document.getElementById('enableContextMenusCheckbox').checked = DEFAULT_OPTIONS['enableContextMenus'];
   document.getElementById('createSubmenusCheckbox').checked = DEFAULT_OPTIONS['createSubmenus'];
   return saveOptions(DEFAULT_OPTIONS['defaultFormat']);
 }
 
 async function init() {
   await restoreOptions();
+  document.getElementById('enableContextMenusCheckbox').
+    addEventListener('click', function(e) {
+      document.getElementById('createSubmenusCheckbox').disabled =
+      !document.getElementById('enableContextMenusCheckbox').checked;
+    });
   document.getElementById('saveButton').
     addEventListener('click', function(e) {
       e.preventDefault();
@@ -54,7 +62,7 @@ async function init() {
   document.getElementById('restoreDefaultsButton').
     addEventListener('click', function(e) {
       e.preventDefault();
-      restoreDefaults()
+      restoreDefaults();
     });
 }
 document.addEventListener('DOMContentLoaded', init);

@@ -22,6 +22,8 @@ See [Manage extension shortcuts in Firefox | Firefox Help](https://support.mozil
 Open the context menu and select the "Format Link as XXX" menu item.
 "XXX" in the menu item label changes as you change the default format by clicking the "Set as default" button in the popup page for the toolbar button.
 
+If you want to disable the context menu option, you can uncheck the "Context Menus" checkbox.
+
 If you check the "Create submenus" in the options page and save the options,
 submenus for each format are created under the "Format Link" context menu group.
 
