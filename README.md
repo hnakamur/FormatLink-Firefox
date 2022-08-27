@@ -42,9 +42,10 @@ In format settings, you can use the mini template language.
 * {{variable}}
     * variable = title / url / page_url / text
     * The value of variable `title` is the HTML page title.
-    * The value of variable `text` is the selected text if some text is selected,
-      the link text if you open the context menu over a link,
-      or the page URL if no text is selected and you open the context menu not over a link.
+    * The value of variable `text` is:
+        * the selected text if some text is selected,
+        * the link text if you open the context menu over a link,
+        * the page title otherwise.
     * The value of the variable `url` is the link if you open the context menu over a link,
       the first link if selection contains a link, or the HTML page URL otherwise.
     * The value of the variable `page_url` is always the HTML page URL.
