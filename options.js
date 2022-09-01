@@ -40,7 +40,7 @@ async function restoreDefaults() {
   for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
-    document.getElementById('html'+i).value = DEFAULT_OPTIONS['html'+i] || 0;
+    document.getElementById('html'+i).checked = DEFAULT_OPTIONS['html'+i] || 0;
   }
   document.getElementById('enableContextMenusCheckbox').checked = DEFAULT_OPTIONS['enableContextMenus'];
   document.getElementById('createSubmenusCheckbox').checked = DEFAULT_OPTIONS['createSubmenus'];
