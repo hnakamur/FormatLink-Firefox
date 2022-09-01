@@ -8,6 +8,9 @@
 <body>
 <h1>FormatLink settings</h1>
 <form>
+<h2>Formats</h2>
+<div class="formats">
+
 <span class="label">Title</span>
 <span class="label">Format</span>
 <span class="label">HTML</span>
@@ -48,6 +51,32 @@
 <input type="text" id="format9" placeholder="Format9"></input>
 <input type="checkbox" id="html9"></input>
 
+</div>
+
+
+<h2>Global Replacements</h2>
+<p>Variable values are preprocessed before applying above formats.</p>
+<div class="global-replacements">
+
+<span class="label">Variable</span>
+<span class="label">Format</span>
+
+<span>page_url</span>
+<input type="text" id="page_url_format"></input>
+
+<span>text</span>
+<input type="text" id="text_format"></input>
+
+<span>title</span>
+<input type="text" id="title_format"></input>
+
+<span>url</span>
+<input type="text" id="url_format"></input>
+
+</div>
+
+
+<h2>Misc</h2>
 <div class="checkboxRow">
 <input type="checkbox" id="enableContextMenusCheckbox"></input>
 <label for="enableContextMenusCheckbox">Context menus</label>
@@ -57,6 +86,7 @@
 <input type="checkbox" id="createSubmenusCheckbox"></input>
 <label for="createSubmenusCheckbox">Create submenus</label>
 </div>
+
 
 <div class="btnGroup">
 <button class="btn btn-primary" id="saveButton">Save changes</button>
