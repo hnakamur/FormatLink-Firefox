@@ -22,8 +22,8 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
     return selection.anchorNode.parentNode.href;
   }
 
-  function formatURL(format, url, title, selectedText, newline, isVar) {
-    let text = '';
+  function formatURL(format, url, title, text, selectedText, newline, isVar) {
+    let result = '';
     let i = 0, len = format.length;
 
     function parseLiteral(str) {
@@ -65,7 +65,7 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
       if (!isVar) {
         const varFormat = options[name + '_format'];
         if (varFormat) {
-          work = formatURL(varFormat, url, title, selectedText, newline, true);
+          work = formatURL(varFormat, url, title, text, selectedText, newline, true);
         }
       }
       while (i < len) {
@@ -83,7 +83,7 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
             throw new Error('parse error');
           }
         } else if (parseLiteral('}}')) {
-          text += work;
+          result += work;
           return;
         } else {
           throw new Error('parse error');
@@ -94,12 +94,12 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
     while (i < len) {
       if (parseLiteral('\\')) {
         if (parseLiteral('n')) {
-          text += newline;
+          result += newline;
         //  isWindows ? "\r\n" : "\n";
         } else if (parseLiteral('t')) {
-          text += "\t";
+          result += "\t";
         } else {
-          text += format.substr(i++, 1);
+          result += format.substr(i++, 1);
         }
       } else if (parseLiteral('{{')) {
         if (parseLiteral('title')) {
@@ -108,24 +108,27 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
           processVar('url', url);
         } else if (parseLiteral('page_url')) {
           processVar('page_url', window.location.href);
+        } else if (parseLiteral('selected_text')) {
+          processVar('selected_text', selectedText);
         } else if (parseLiteral('text')) {
-          processVar('text', selectedText ? selectedText : title);
+          processVar('text', text);
         }
       } else {
-        text += format.substr(i++, 1);
+        result += format.substr(i++, 1);
       }
     }
-    return text;
+    return result;
   }
 
   let title = document.title;
   let text = linkText;
   let href = linkUrl;
+  let selectedText = '';
   let selection = window.getSelection();
   if (selection.rangeCount > 0) {
-    let selectionText = selection.toString().trim();
-    if (selectionText) {
-      text = selectionText;
+    selectedText = selection.toString().trim();
+    if (selectedText) {
+      text = selectedText;
 
       let hrefInSelection = getFirstLinkInSelection(selection);
       if (!href && hrefInSelection) {
@@ -140,5 +143,5 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
     href = window.location.href;
   }
 
-  return formatURL(format, href, title, text, newline);
+  return formatURL(format, href, title, text, selectedText, newline);
 }
