@@ -40,12 +40,15 @@ You can modify formats in [Tools] -> [Extensions] -> Clik "Options" link in "For
 In format settings, you can use the mini template language.
 
 * {{variable}}
-    * variable = title / url / page_url / text
+    * variable = title / url / page_url / text / selected_text
     * The value of variable `title` is the HTML page title.
     * The value of variable `text` is:
         * the selected text if some text is selected,
         * the link text if you open the context menu over a link,
         * the page title otherwise.
+    * The value of variable `selected_text` is
+        * the selected text if some text is selected,
+        * empty string if no text is selected.
     * The value of the variable `url` is the link if you open the context menu over a link,
       the first link if selection contains a link, or the HTML page URL otherwise.
     * The value of the variable `page_url` is always the HTML page URL.

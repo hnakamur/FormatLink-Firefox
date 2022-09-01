@@ -30,6 +30,7 @@ const DEFAULT_OPTIONS = {
   "format9": "",
   "html9": 0,
   "page_url_format": "",
+  "selected_text_format": "",
   "text_format": "",
   "title_format": "",
   "url_format": "",
@@ -39,6 +40,7 @@ const DEFAULT_OPTIONS = {
 
 const VARIABLE_NAMES = [
   "page_url",
+  "selected_text",
   "text",
   "title",
   "url",
