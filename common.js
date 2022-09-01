@@ -29,9 +29,20 @@ const DEFAULT_OPTIONS = {
   "title9": "",
   "format9": "",
   "html9": 0,
+  "page_url_format": "",
+  "text_format": "",
+  "title_format": "",
+  "url_format": "",
   "enableContextMenus": true,
   "createSubmenus": false
 };
+
+const VARIABLE_NAMES = [
+  "page_url",
+  "text",
+  "title",
+  "url",
+];
 
 async function gettingOptions() {
   let options = await browser.storage.sync.get(null);
@@ -53,7 +64,7 @@ function getFormatCount(options) {
   return i - 1;
 }
 
-async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
+async function copyLinkToClipboard(format, asHTML, options, linkUrl, linkText) {
   try {
     const results = await browser.tabs.executeScript({
       code: "typeof FormatLink_formatLink === 'function';",
@@ -71,6 +82,7 @@ async function copyLinkToClipboard(format, asHTML, linkUrl, linkText) {
     const newline = browser.runtime.PlatformOs === 'win' ? '\r\n' : '\n';
 
     let code = 'FormatLink_formatLink(' + JSON.stringify(format) + ',' +
+      JSON.stringify(options) + ',' +
       JSON.stringify(newline) + ',' +
       (linkUrl ? JSON.stringify(linkUrl) + ',' : '') + 
       (linkText ? JSON.stringify(linkText) + ',' : '') + 

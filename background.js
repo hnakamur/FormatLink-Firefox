@@ -11,7 +11,7 @@ async function saveDefaultFormat(formatID) {
         const options = await gettingOptions();
         const format = options['format' + formatID];
         const asHTML = options['html' + formatID];
-        await copyLinkToClipboard(format, asHTML);
+        await copyLinkToClipboard(format, asHTML, options);
       }
     } catch (err) {
       console.error("FormatLink extension failed to copy URL to clipboard.", err);
@@ -32,7 +32,7 @@ async function saveDefaultFormat(formatID) {
           }
           const format = options['format' + formatID];
           const asHTML = options['html' + formatID];
-          await copyLinkToClipboard(format, asHTML, info.linkUrl, info.linkText);
+          await copyLinkToClipboard(format, asHTML, options, info.linkUrl, info.linkText);
         } catch (err) {
           console.error("FormatLink extension failed to copy URL to clipboard.", err);
         }

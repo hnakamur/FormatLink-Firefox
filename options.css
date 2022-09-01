@@ -1,10 +1,14 @@
-form {
+body {
+  padding: 8px;
+}
+h2 {
+  margin-top: 24px;
+}
+
+.formats {
   display: grid;
   grid-template-columns: 12rem 1fr 4rem;
-  margin: 16px;
-}
-form > * {
-  margin: 8px;
+  gap: 16px;
 }
 input {
   font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
@@ -12,9 +16,11 @@ input {
 .label {
   font-weight: bold;
 }
-.checkboxRow {
-  grid-column: span 3;
+.global-replacements {
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: 16px;
 }
 .btnGroup {
-  grid-column: span 3;
+  margin-top: 24px;
 }

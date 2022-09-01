@@ -5,6 +5,9 @@ async function restoreOptions() {
     document.getElementById('format'+i).value = options['format'+i] || '';
     document.getElementById('html'+i).checked = !!options['html'+i];
   }
+  for (let name of VARIABLE_NAMES) {
+    document.getElementById(name+'_format').value = options[name+'_format'] || '';
+  }
   document.getElementById('enableContextMenusCheckbox').checked = options['enableContextMenus'];
   document.getElementById('createSubmenusCheckbox').checked = options['createSubmenus'];
 }
@@ -18,6 +21,9 @@ async function saveOptions(defaultFormatID) {
       options['title'+i] = document.getElementById('title'+i).value;
       options['format'+i] = document.getElementById('format'+i).value;
       options['html'+i] = document.getElementById('html'+i).checked ? 1 : 0;
+    }
+    for (let name of VARIABLE_NAMES) {
+      options[name+'_format'] = document.getElementById(name+'_format').value;
     }
     options['enableContextMenus'] = document.getElementById('enableContextMenusCheckbox').checked;
     options['createSubmenus'] = document.getElementById('createSubmenusCheckbox').checked;
@@ -40,7 +46,10 @@ async function restoreDefaults() {
   for (let i = 1; i <= 9; ++i) {
     document.getElementById('title'+i).value = DEFAULT_OPTIONS['title'+i] || '';
     document.getElementById('format'+i).value = DEFAULT_OPTIONS['format'+i] || '';
-    document.getElementById('html'+i).value = DEFAULT_OPTIONS['html'+i] || 0;
+    document.getElementById('html'+i).checked = DEFAULT_OPTIONS['html'+i] || 0;
+  }
+  for (let name of VARIABLE_NAMES) {
+    document.getElementById(name+'_format').value = DEFAULT_OPTIONS[name+'_format'] || '';
   }
   document.getElementById('enableContextMenusCheckbox').checked = DEFAULT_OPTIONS['enableContextMenus'];
   document.getElementById('createSubmenusCheckbox').checked = DEFAULT_OPTIONS['createSubmenus'];

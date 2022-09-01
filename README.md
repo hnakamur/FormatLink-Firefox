@@ -98,6 +98,14 @@ Here are examples:
 \\href\{{{url}}\}\{{{text}}\}
 ```
 
+### Global variable replacements
+
+You can preprocess value of each variable before applying above formats.
+
+For example, you can replace opening and close double quotes in `text` variable
+with ASCII doublequote by settings `text` variable global replacements to
+`{{text.s("[“”]","\"")}}` or `{{text.s("[\\u201c\\u201d]","\"")}}`.
+
 ## KNOWN LIMITATIONS
 
 * Due to security reason, you cannot copy the URL on some pages like addons.mozilla.org. See [Content scripts - Mozilla | MDN](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Content_scripts) for details.

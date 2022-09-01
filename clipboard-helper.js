@@ -17,14 +17,13 @@ function FormatLink_copyHTMLToClipboard(text) {
   document.execCommand("copy");
 }
 
-function FormatLink_formatLink(format, newline, linkUrl, linkText) {
+function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
   function getFirstLinkInSelection(selection) {
     return selection.anchorNode.parentNode.href;
   }
 
-  function formatURL(format, url, title, selectedText, newline) {
+  function formatURL(format, url, title, selectedText, newline, isVar) {
     let text = '';
-    let work;
     let i = 0, len = format.length;
 
     function parseLiteral(str) {
@@ -61,8 +60,14 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
       }
     }
 
-    function processVar(value) {
+    function processVar(name, value) {
       let work = value;
+      if (!isVar) {
+        const varFormat = options[name + '_format'];
+        if (varFormat) {
+          work = formatURL(varFormat, url, title, selectedText, newline, true);
+        }
+      }
       while (i < len) {
         if (parseLiteral('.s(')) {
           let arg1 = parseString();
@@ -98,13 +103,13 @@ function FormatLink_formatLink(format, newline, linkUrl, linkText) {
         }
       } else if (parseLiteral('{{')) {
         if (parseLiteral('title')) {
-          processVar(title);
+          processVar('title', title);
         } else if (parseLiteral('url')) {
-          processVar(url);
+          processVar('url', url);
         } else if (parseLiteral('page_url')) {
-          processVar(window.location.href);
+          processVar('page_url', window.location.href);
         } else if (parseLiteral('text')) {
-          processVar(selectedText ? selectedText : title);
+          processVar('text', selectedText ? selectedText : title);
         }
       } else {
         text += format.substr(i++, 1);
