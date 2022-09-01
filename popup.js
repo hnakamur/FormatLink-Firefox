@@ -64,6 +64,10 @@ async function init() {
     }
   });
 
+  document.getElementById('optionsButton').addEventListener('click', () => {
+    browser.runtime.openOptionsPage();
+  });
+
   const options = await gettingOptions();
   const format = options['format' + options.defaultFormat];
   const asHTML = options['html' + options.defaultFormat];
