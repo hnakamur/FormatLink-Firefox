@@ -136,16 +136,15 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
       }
     }
   }
-  let selectedText2 = '';
-  const elem = document.activeElement;
-  if (elem && elem.selectionStart !== elem.selectionEnd) {
-    selectedText2 = elem.value.substring(elem.selectionStart, elem.selectionEnd);
-    console.log('set selectedText from activeElement', selectedText2);
+  if (!selectedText) {
+    const elem = document.activeElement;
+    if (elem && elem.selectionStart !== elem.selectionEnd) {
+      selectedText = elem.value.substring(elem.selectionStart, elem.selectionEnd);
+      console.log('set selectedText from activeElement', selectedText);
+    }
   }
   if (selectedText) {
     text = selectedText;
-  } else if (selectedText2) {
-    text = selectedText2;
   }
   if (!text) {
     text = title;
