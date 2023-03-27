@@ -127,14 +127,25 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
   let selection = window.getSelection();
   if (selection.rangeCount > 0) {
     selectedText = selection.toString().trim();
-    if (selectedText) {
-      text = selectedText;
+    console.log('set selectedText from window.getSelection', selectedText);
 
+    if (selectedText) {
       let hrefInSelection = getFirstLinkInSelection(selection);
       if (!href && hrefInSelection) {
         href = hrefInSelection;
       }
     }
+  }
+  let selectedText2 = '';
+  const elem = document.activeElement;
+  if (elem && elem.selectionStart !== elem.selectionEnd) {
+    selectedText2 = elem.value.substring(elem.selectionStart, elem.selectionEnd);
+    console.log('set selectedText from activeElement', selectedText2);
+  }
+  if (selectedText) {
+    text = selectedText;
+  } else if (selectedText2) {
+    text = selectedText2;
   }
   if (!text) {
     text = title;

@@ -107,7 +107,6 @@ async function copyLinkToClipboard(format, asHTML, options, linkUrl, linkText) {
     // This could happen if the extension is not allowed to run code in
     // the page, for example if the tab is a privileged page.
     console.error('Failed to copy text: ' + err);
-    alert('Failed to copy text: ' + err);
   }
 }
 
