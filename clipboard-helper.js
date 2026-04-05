@@ -82,6 +82,8 @@ function FormatLink_formatLink(format, options, newline, linkUrl, linkText) {
           } else {
             throw new Error('parse error');
           }
+        } else if (parseLiteral('.urlencode()')) {
+          work = encodeURIComponent(work);
         } else if (parseLiteral('}}')) {
           result += work;
           return;

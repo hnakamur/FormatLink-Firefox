@@ -14,11 +14,11 @@ const DEFAULT_OPTIONS = {
   "title4": 'HTML',
   "format4": "<a href=\"{{url.s(\"\\\"\",\"&quot;\")}}\">{{text.s(\"<\",\"&lt;\")}}</a>",
   "html4": 1,
-  "title5": "LaTeX",
-  "format5": "\\\\href\\{{{url}}\\}\\{{{text}}\\}",
-  "html5": 0,
-  "title6": "",
-  "format6": "",
+  "title5": "HTMLSelectedText",
+  "format5": "<a href=\"{{page_url.s(\"\\\"\",\"&quot;\")}}#:~:text={{selected_text.urlencode()}}\">{{title.s(\"<\",\"&lt;\")}}</a>",
+  "html5": 1,
+  "title6": "LaTeX",
+  "format6": "\\\\href\\{{{url}}\\}\\{{{text}}\\}",
   "html6": 0,
   "title7": "",
   "format7": "",
@@ -35,7 +35,7 @@ const DEFAULT_OPTIONS = {
   "title_format": "",
   "url_format": "",
   "enableContextMenus": true,
-  "createSubmenus": false
+  "createSubmenus": true
 };
 
 const VARIABLE_NAMES = [
