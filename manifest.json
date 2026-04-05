@@ -8,11 +8,6 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "applications": {
-    "gecko": {
-      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014"
-    }
-  },
   "background": {
     "scripts": [
       "common.js",
@@ -72,7 +67,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "@extension-without-data-collection",
+      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014",
       "data_collection_permissions": {
         "required": ["none"]
       }
