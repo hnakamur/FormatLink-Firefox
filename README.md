@@ -59,6 +59,8 @@ In format settings, you can use the mini template language.
     * You must escape the first argument for string and regexp.
       For example, `.s("\\[","\\[")` means replacing `\[` with `\\[`
     * You can chain multiple .s("foo","bar")
+* {{variable.urlencode()}}
+    * Which means `encodeURIComponent(variable)`
 * You can use the escape character \ in strings. For example, you need to escape `\` with `\` like `\\`,
   and also you need to escape `{` with `\` like `\{`. See the LaTeX example below.
 * Other characters are treated as literal strings.
@@ -81,6 +83,12 @@ Here are examples:
 
 ```
 <a href="{{url.s("\"","&quot;")}}">{{text.s("<","&lt;")}}</a>
+```
+
+* HTML with selected text
+
+```
+<a href="{{page_url.s("\"","&quot;")}}#:~:text={{selected_text.urlencode()}}">{{title.s("<","&lt;")}}</a>
 ```
 
 * Text
