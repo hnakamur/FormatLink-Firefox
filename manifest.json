@@ -1,6 +1,6 @@
 {
   "name": "Format Link",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "manifest_version": 2,
   "description": "Format a link and copy it to the clipboard.",
   "icons": {
@@ -70,6 +70,14 @@
       "description": "Copy a link in format 9"
     }
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@extension-without-data-collection",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },  
   "permissions": [
     "activeTab",
     "clipboardWrite",
