@@ -1,17 +1,12 @@
 {
   "name": "Format Link",
-  "version": "5.5.0",
+  "version": "5.5.2",
   "manifest_version": 2,
   "description": "Format a link and copy it to the clipboard.",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
-  },
-  "applications": {
-    "gecko": {
-      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014"
-    }
   },
   "background": {
     "scripts": [
@@ -70,6 +65,14 @@
       "description": "Copy a link in format 9"
     }
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "pocemhmkmchpgamlnocemnbhlcjcbjgg@chrome-store-foxified-2931337014",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },  
   "permissions": [
     "activeTab",
     "clipboardWrite",
